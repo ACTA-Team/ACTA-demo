@@ -11,65 +11,115 @@ import { toast } from "sonner";
 export default function Home() {
   const { walletAddress, signTransaction } = useWalletContext();
   const { connectWithWalletKit } = useWalletKit();
-  const { issuanceContractId } = getEnvDefaults();
+  const { issuanceContractId, rpcUrl, networkPassphrase } = getEnvDefaults();
 
-  const [vcId, setVcId] = useState("");
-  const [didUri, setDidUri] = useState("");
-  // Normal form fields (no JSON input)
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [type, setType] = useState("");
-  const [expires, setExpires] = useState("");
-  const [status, setStatus] = useState<string | null>(null);
+  // Friendly VC fields
+  const [vcId, setVcId] = useState(""); // Credential ID
+  const [issuerDid, setIssuerDid] = useState("");
+  const [issuerName, setIssuerName] = useState("");
+  const [subjectDid, setSubjectDid] = useState("");
+  const [degreeType, setDegreeType] = useState("");
+  const [degreeName, setDegreeName] = useState("");
+  const [validFrom, setValidFrom] = useState(""); // ISO date-time
   const [txId, setTxId] = useState<string | null>(null);
 
   const handleConnect = async () => {
     await connectWithWalletKit();
   };
 
-  const handleStore = async () => {
+  const handleCreate = async () => {
     if (!walletAddress) {
-      setStatus("Connect your wallet first");
+      toast.error("Connect your wallet first");
       return;
     }
     if (!issuanceContractId) {
-      setStatus("Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local");
+      toast.error("Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local");
       return;
     }
-    if (!vcId || !didUri) {
-      setStatus("Fill vcId and DID");
-      return;
-    }
-    // Basic form validation
-    if (!firstName || !lastName) {
-      setStatus("Fill first name and last name");
+    if (!vcId || !issuerDid || !issuerName || !subjectDid || !degreeType || !degreeName || !validFrom) {
+      toast.error("Please complete all fields");
       return;
     }
     if (!signTransaction) {
-      setStatus("Signer unavailable");
+      toast.error("Signer unavailable");
       return;
     }
-    setStatus("Signing and submitting...");
     toast.info("Signing and submitting...");
     setTxId(null);
     try {
-      const fields = { firstName, lastName, email, type, expires };
+      const vc = {
+        "@context": [
+          "https://www.w3.org/ns/credentials/v2",
+          "https://www.w3.org/ns/credentials/examples/v2",
+        ],
+        id: vcId,
+        type: ["VerifiableCredential", "ExampleDegreeCredential"],
+        issuer: { id: issuerDid, name: issuerName },
+        validFrom,
+        credentialSubject: {
+          id: subjectDid,
+          degree: { type: degreeType, name: degreeName },
+        },
+        proof: {
+          type: "DataIntegrityProof",
+          created: new Date().toISOString(),
+          verificationMethod:
+            "did:key:zDnaebSRtPnW6YCpxAhR5JPxJqt9UunCsBPhLEtUokUvp87nQ",
+          cryptosuite: "ecdsa-rdfc-2019",
+          proofPurpose: "assertionMethod",
+          proofValue:
+            "z35CwmxThsUQ4t79JfacmMcw4y1kCqtD4rKqUooKM2NyKwdF5jmXMRo9oGnzHerf8hfQiWkEReycSXC2NtRrdMZN4",
+        },
+      };
+
+      const vcData = JSON.stringify(vc);
+      const fields = {
+        issuerName,
+        subjectDid,
+        degreeType,
+        degreeName,
+        validFrom,
+        vcData,
+      } as Record<string, string>;
+
       const result = await storeVcSingleCall({
         owner: walletAddress,
         vcId,
-        didUri,
+        didUri: issuerDid,
         fields,
         signTransaction: (xdr, opts) => signTransaction(xdr, opts),
       });
       setTxId(result.txId);
-      setStatus("Submitted. Waiting for confirmation...");
-      toast.success("Transaction submitted");
+      const isTestnet = /testnet/i.test(rpcUrl) || /Test SDF Network/i.test(networkPassphrase);
+      const explorerBase = isTestnet ? "https://stellar.expert/explorer/testnet" : "https://stellar.expert/explorer/public";
+      const explorerUrl = `${explorerBase}/tx/${result.txId}`;
+      toast.success("Credencial creada", {
+        description: `Tx: ${result.txId}`,
+        action: {
+          label: "Ver en Stellar Expert",
+          onClick: () => {
+            try {
+              window.open(explorerUrl, "_blank", "noopener,noreferrer");
+            } catch (_) {
+              window.location.href = explorerUrl;
+            }
+          },
+        },
+      });
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
-      setStatus(msg);
       toast.error(msg);
     }
+  };
+
+  const fillExample = () => {
+    setVcId("http://university.example/credentials/3732");
+    setIssuerDid("did:example:76e12ec712ebc6f1c221ebfeb1f");
+    setIssuerName("Example University");
+    setSubjectDid("did:example:ebfeb1f712ebc6f1c276e12ec21");
+    setDegreeType("ExampleBachelorDegree");
+    setDegreeName("Bachelor of Science and Arts");
+    setValidFrom("2010-01-01T19:23:24Z");
   };
 
   return (
@@ -85,77 +135,79 @@ export default function Home() {
         </div>
       ) : (
         <div className="rounded border p-4 space-y-3">
+          <div className="flex justify-end">
+            <Button variant="secondary" onClick={fillExample}>Fill Example</Button>
+          </div>
           <div>
-            <label className="text-sm">VC ID</label>
+            <label className="text-sm">Credential ID</label>
             <input
               className="w-full border rounded p-2"
               value={vcId}
               onChange={(e) => setVcId(e.target.value)}
-              placeholder="vc-123"
+              placeholder="http://university.example/credentials/3732"
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label className="text-sm">First name</label>
+              <label className="text-sm">Issuer name</label>
               <input
                 className="w-full border rounded p-2"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                placeholder="John"
+                value={issuerName}
+                onChange={(e) => setIssuerName(e.target.value)}
+                placeholder="Example University"
               />
             </div>
             <div>
-              <label className="text-sm">Last name</label>
+              <label className="text-sm">Issuer DID</label>
               <input
                 className="w-full border rounded p-2"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                placeholder="Doe"
+                value={issuerDid}
+                onChange={(e) => setIssuerDid(e.target.value)}
+                placeholder="did:example:76e12ec712ebc6f1c221ebfeb1f"
               />
             </div>
             <div>
-              <label className="text-sm">Email</label>
+              <label className="text-sm">Valid from</label>
               <input
                 className="w-full border rounded p-2"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="john@example.com"
+                type="text"
+                value={validFrom}
+                onChange={(e) => setValidFrom(e.target.value)}
+                placeholder="2010-01-01T19:23:24Z"
               />
             </div>
             <div>
-              <label className="text-sm">Credential type</label>
+              <label className="text-sm">Subject DID</label>
               <input
                 className="w-full border rounded p-2"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                placeholder="Attestation"
+                value={subjectDid}
+                onChange={(e) => setSubjectDid(e.target.value)}
+                placeholder="did:example:ebfeb1f712ebc6f1c276e12ec21"
               />
             </div>
             <div>
-              <label className="text-sm">Expires (YYYY-MM-DD)</label>
+              <label className="text-sm">Degree type</label>
               <input
                 className="w-full border rounded p-2"
-                type="date"
-                value={expires}
-                onChange={(e) => setExpires(e.target.value)}
+                value={degreeType}
+                onChange={(e) => setDegreeType(e.target.value)}
+                placeholder="ExampleBachelorDegree"
               />
             </div>
-          </div>
-          <div>
-            <label className="text-sm">Issuer DID</label>
-            <input
-              className="w-full border rounded p-2"
-              value={didUri}
-              onChange={(e) => setDidUri(e.target.value)}
-              placeholder="did:pkh:stellar:testnet:G..."
-            />
+            <div>
+              <label className="text-sm">Degree name</label>
+              <input
+                className="w-full border rounded p-2"
+                value={degreeName}
+                onChange={(e) => setDegreeName(e.target.value)}
+                placeholder="Bachelor of Science and Arts"
+              />
+            </div>
           </div>
           <div className="pt-2">
-            <Button onClick={handleStore}>Store in Vault (user-signed)</Button>
+            <Button onClick={handleCreate}>Create Credential</Button>
           </div>
 
-          {status && <p className="mt-3 text-sm">{status}</p>}
           {txId && (
             <div className="mt-2">
               <p className="text-sm">Tx ID:</p>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useWalletContext } from "@/providers/wallet.provider";
 import { useWalletKit } from "@/hooks/stellar/use-wallet-kit";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,26 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <div className="flex items-center gap-3">
-          <Link href="/" className="font-semibold">ACTA Demo</Link>
+          <Link href="/" className="flex items-center gap-2">
+            <span className="sr-only">ACTA Demo</span>
+            <Image
+              src="/black.png"
+              alt="ACTA Logo"
+              width={24}
+              height={24}
+              className="block dark:hidden"
+              priority
+            />
+            <Image
+              src="/white.png"
+              alt="ACTA Logo"
+              width={24}
+              height={24}
+              className="hidden dark:block"
+              priority
+            />
+            <span className="font-semibold">ACTA Demo</span>
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <AnimatedThemeToggler className="scale-75" />
