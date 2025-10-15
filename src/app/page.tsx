@@ -6,6 +6,7 @@ import { useWalletKit } from "@/hooks/stellar/use-wallet-kit";
 import { storeVcSingleCall } from "@/lib/vault/store";
 import { getEnvDefaults } from "@/lib/env";
 import { Button } from "@/components/ui/button";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { toast } from "sonner";
 
 export default function Home() {
@@ -134,7 +135,7 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        <div className="rounded border p-4 space-y-3">
+        <div className="relative overflow-hidden rounded border p-4 space-y-3">
           <div className="flex justify-end">
             <Button variant="secondary" onClick={fillExample}>Fill Example</Button>
           </div>
@@ -214,6 +215,20 @@ export default function Home() {
               <p className="text-xs font-mono break-all">{txId}</p>
             </div>
           )}
+
+          {/* Border beams for visual accent */}
+          <BorderBeam
+            duration={6}
+            size={400}
+            className="from-transparent via-red-500 to-transparent"
+          />
+          <BorderBeam
+            duration={6}
+            delay={3}
+            size={400}
+            borderWidth={2}
+            className="from-transparent via-blue-500 to-transparent"
+          />
         </div>
       )}
     </section>
