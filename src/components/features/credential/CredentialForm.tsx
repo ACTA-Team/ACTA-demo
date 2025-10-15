@@ -94,13 +94,12 @@ export function CredentialForm() {
         : 'https://stellar.expert/explorer/public';
       const explorerUrl = `${explorerBase}/tx/${result.txId}`;
       toast.success('Credential created', {
-        description: `Tx: ${result.txId}`,
         action: {
           label: 'View on Stellar Expert',
           onClick: () => {
             try {
               window.open(explorerUrl, '_blank', 'noopener,noreferrer');
-            } catch (_) {
+            } catch {
               window.location.href = explorerUrl;
             }
           },
