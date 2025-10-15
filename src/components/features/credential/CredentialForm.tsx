@@ -121,13 +121,13 @@ export function CredentialForm() {
   };
 
   return (
-    <section className="container mx-auto max-w-2xl px-4 py-8">
+    <section className="container mx-auto max-w-2xl px-3 py-6 md:px-4 md:py-8">
       {!walletAddress ? (
         <div className="min-h-[50vh] flex flex-col items-center justify-center text-center">
           <p className="text-base">Connect your wallet to begin.</p>
         </div>
       ) : (
-        <div className="relative overflow-hidden rounded border p-4 space-y-3">
+        <div className="relative overflow-hidden rounded border p-3 md:p-4 space-y-3">
           <div className="flex justify-end">
             <Button variant="outline" onClick={fillExample}>Fill Example</Button>
           </div>
