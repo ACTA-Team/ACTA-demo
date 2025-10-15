@@ -1,0 +1,46 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useWalletContext } from "@/providers/wallet.provider";
+import { useVault } from "@/hooks/vault/use-vault";
+import { toast } from "sonner";
+import { BorderBeam } from "@/components/ui/border-beam";
+
+export function AuthorizedIssuersCard() {
+  const { walletAddress } = useWalletContext();
+  const { loading, authorizeSelf } = useVault();
+  const [txAuth, setTxAuth] = useState<string | null>(null);
+
+  const doAuthorize = async () => {
+    try {
+      toast.info("Authorizing connected wallet as issuer...");
+      const res = await authorizeSelf();
+      setTxAuth(res.txId);
+      toast.success("Wallet authorized", { description: `Tx: ${res.txId}` });
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to authorize issuer");
+    }
+  };
+
+  return (
+    <div className="relative overflow-hidden rounded border p-4 space-y-3">
+      <div>
+        <p className="text-sm">Wallet</p>
+        <p className="text-xs font-mono break-all">{walletAddress || "Not connected"}</p>
+      </div>
+      <div className="flex gap-2 pt-2">
+        <Button onClick={doAuthorize} disabled={!walletAddress || loading} variant="secondary">Authorize Wallet</Button>
+      </div>
+      {txAuth && (
+        <div className="mt-2">
+          <p className="text-sm">Authorize Issuer Tx</p>
+          <p className="text-xs font-mono break-all">{txAuth}</p>
+        </div>
+      )}
+
+      <BorderBeam duration={6} size={400} className="from-transparent via-red-500 to-transparent" />
+      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-blue-500 to-transparent" />
+    </div>
+  );
+}

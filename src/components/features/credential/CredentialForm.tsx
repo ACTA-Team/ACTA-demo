@@ -201,9 +201,8 @@ export function CredentialForm() {
           </div>
 
           {txId && (
-            <div className="mt-2">
-              <p className="text-sm">Tx ID:</p>
-              <p className="text-xs font-mono break-all">{txId}</p>
+            <div className="mt-2 text-xs text-muted-foreground">
+              <p>Transaction submitted successfully.</p>
             </div>
           )}
 
