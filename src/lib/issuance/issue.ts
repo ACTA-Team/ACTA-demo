@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as StellarSdk from "@stellar/stellar-sdk";
-import { getEnvDefaults } from "@/lib/env";
+import * as StellarSdk from '@stellar/stellar-sdk';
+import { getEnvDefaults } from '@/lib/env';
 
 type IssueParams = {
   owner: string;
@@ -19,8 +19,8 @@ async function waitForTx(server: StellarSdk.rpc.Server, hash: string): Promise<v
   for (let i = 0; i < 30; i++) {
     const res = await server.getTransaction(hash);
     const status = (res as { status: string }).status;
-    if (status === "SUCCESS") return;
-    if (status === "FAILED") throw new Error("Transaction failed");
+    if (status === 'SUCCESS') return;
+    if (status === 'FAILED') throw new Error('Transaction failed');
     await new Promise((r) => setTimeout(r, 1000));
   }
 }
@@ -33,7 +33,8 @@ export async function issueCredentialSingleCall({
   signTransaction,
 }: IssueParams): Promise<IssueResult> {
   const { apiBaseUrl, rpcUrl, networkPassphrase, issuanceContractId } = getEnvDefaults();
-  if (!issuanceContractId) throw new Error("Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local");
+  if (!issuanceContractId)
+    throw new Error('Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local');
 
   const server = new StellarSdk.rpc.Server(rpcUrl);
   const sourceAccount = await server.getAccount(owner);
@@ -46,7 +47,7 @@ export async function issueCredentialSingleCall({
   })
     .addOperation(
       contract.call(
-        "issue",
+        'issue',
         StellarSdk.Address.fromString(owner).toScVal(),
         StellarSdk.xdr.ScVal.scvString(vcId),
         StellarSdk.xdr.ScVal.scvString(vcData),
@@ -64,8 +65,8 @@ export async function issueCredentialSingleCall({
 
   // Submit signed XDR via API (user-signed flow)
   const resp = await fetch(`${apiBaseUrl}/credentials`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr, vcId }),
   });
   if (!resp.ok) {

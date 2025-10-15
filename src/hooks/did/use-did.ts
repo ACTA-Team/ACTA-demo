@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useCallback } from "react";
-import { getEnvDefaults } from "@/lib/env";
-import { useWalletContext } from "@/providers/wallet.provider";
-import { useDidContext } from "@/providers/did.provider";
+import { useCallback } from 'react';
+import { getEnvDefaults } from '@/lib/env';
+import { useWalletContext } from '@/providers/wallet.provider';
+import { useDidContext } from '@/providers/did.provider';
 
-function detectNetworkTag(rpcUrl: string, networkPassphrase: string): "testnet" | "public" {
+function detectNetworkTag(rpcUrl: string, networkPassphrase: string): 'testnet' | 'public' {
   const isTestnet = /testnet/i.test(rpcUrl) || /Test SDF Network/i.test(networkPassphrase);
-  return isTestnet ? "testnet" : "public";
+  return isTestnet ? 'testnet' : 'public';
 }
 
 export function useDid() {

@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ACTA Demo
 
-## Getting Started
+This demo showcases how to integrate the ACTA API with a Next.js application using a Stellar wallet (Freighter). It is intended for developers who want to understand the code-level steps to issue and store Verifiable Credentials (VC) via ACTA.
 
-First, run the development server:
+## What this demo includes
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Wallet-gated UI with simple flows: Vault, Authorized Issuers, DID, and Credential creation.
+- Client-signed transactions using `@creit.tech/stellar-wallets-kit`.
+- Minimal helpers that call ACTA API endpoints at the code level.
+
+## Prerequisites
+
+- Install Freighter: https://www.freighter.app/
+- Access to Soroban Testnet RPC.
+
+## Environment
+
+Create `.env.local` with:
+
+```
+NEXT_PUBLIC_ACTA_API_URL=http://localhost:8000
+NEXT_PUBLIC_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
+NEXT_PUBLIC_NETWORK_PASSPHRASE=Test SDF Network ; September 2015
+
+# Required: your deployed contract IDs
+NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID=
+NEXT_PUBLIC_VAULT_CONTRACT_ID=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+These variables are read in `src/lib/env.ts` and used by the issuance/store helpers.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Run locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm install
+npm run dev
+```
 
-## Learn More
+Open `http://localhost:3000`.
 
-To learn more about Next.js, take a look at the following resources:
+## Code-level API integration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The demo integrates with the public ACTA API using two minimal helpers:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Issuance: `src/lib/issuance/issue.ts`
+  - Builds a Soroban transaction for `issue` with your issuance contract ID.
+  - Signs the XDR with the connected wallet.
+  - Submits user-signed XDR to `POST /credentials`.
 
-## Deploy on Vercel
+  Example usage:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  ```ts
+  import { issueCredentialSingleCall } from '@/lib/issuance/issue';
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+  const { txId } = await issueCredentialSingleCall({
+    owner: walletAddress,
+    vcId: 'vc:example:123',
+    vcData: JSON.stringify({ type: 'Attestation', subject: '...' }),
+    vaultContractId: process.env.NEXT_PUBLIC_VAULT_CONTRACT_ID!,
+    signTransaction,
+  });
+  ```
+
+- Vault store (client-signed flow): `src/lib/vault/store.ts`
+  - Prepares an unsigned XDR from normal form fields via `POST /tx/prepare/store`.
+  - Signs the XDR with the connected wallet.
+  - Submits to `POST /vault/store`.
+
+  Example usage:
+
+  ```ts
+  import { storeVcSingleCall } from '@/lib/vault/store';
+
+  const { txId } = await storeVcSingleCall({
+    owner: walletAddress,
+    vcId,
+    didUri: ownerDid,
+    fields: {
+      vcData,
+      issuerName,
+      subjectDid,
+      degreeType,
+      degreeName,
+      validFrom,
+    },
+    signTransaction, // provided by WalletProvider
+  });
+  ```
+
+Both helpers rely on `signTransaction` from `WalletProvider` (`src/providers/wallet.provider.tsx`), which wraps Freighter via `StellarWalletsKit`.
+
+The credential form demonstrating these calls lives at `src/components/features/credential/CredentialForm.tsx`.
+
+## Endpoints and docs
+
+- Public API reference: https://docs.acta.build
+- Base URL: `https://api.acta.build`
+- Key endpoints:
+  - `POST /credentials` — issue a VC and store it in the Vault
+  - `POST /vault/store` — store a VC via a user-signed XDR
+  - `POST /tx/prepare/store` — prepare unsigned XDR from normal form fields
+  - `GET /verify/{vc_id}` — verify VC status
+
+## Notes
+
+- Use testnet settings while developing locally.
+- Do not store PII in plaintext on chain; prefer hashes or ciphertext.
+- Ensure your issuance and vault contract IDs are set and valid before issuing or storing.

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { useWalletContext } from "@/providers/wallet.provider";
-import { useDid } from "@/hooks/did/use-did";
-import { useVault } from "@/hooks/vault/use-vault";
-import { toast } from "sonner";
-import { BorderBeam } from "@/components/ui/border-beam";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useWalletContext } from '@/providers/wallet.provider';
+import { useDid } from '@/hooks/did/use-did';
+import { useVault } from '@/hooks/vault/use-vault';
+import { toast } from 'sonner';
+import { BorderBeam } from '@/components/ui/border-beam';
 
 export function VaultSetupCard() {
   const { walletAddress } = useWalletContext();
@@ -16,16 +16,16 @@ export function VaultSetupCard() {
 
   const doCreateVault = async () => {
     if (!ownerDid) {
-      toast.error("Create or save your DID first");
+      toast.error('Create or save your DID first');
       return;
     }
     try {
-      toast.info("Creating vault...");
+      toast.info('Creating vault...');
       const res = await createVault(ownerDid);
       setTxInit(res.txId);
-      toast.success("Vault created", { description: `Tx: ${res.txId}` });
+      toast.success('Vault created', { description: `Tx: ${res.txId}` });
     } catch (e: any) {
-      toast.error(e?.message || "Failed to create vault");
+      toast.error(e?.message || 'Failed to create vault');
     }
   };
 
@@ -33,14 +33,16 @@ export function VaultSetupCard() {
     <div className="relative overflow-hidden rounded border p-4 space-y-3">
       <div>
         <p className="text-sm">Wallet</p>
-        <p className="text-xs font-mono break-all">{walletAddress || "Not connected"}</p>
+        <p className="text-xs font-mono break-all">{walletAddress || 'Not connected'}</p>
       </div>
       <div>
         <p className="text-sm">Owner DID</p>
-        <p className="text-xs font-mono break-all">{ownerDid || "—"}</p>
+        <p className="text-xs font-mono break-all">{ownerDid || '—'}</p>
       </div>
       <div className="flex gap-2 pt-2">
-        <Button onClick={doCreateVault} disabled={!walletAddress || loading} variant="outline">Create Vault</Button>
+        <Button onClick={doCreateVault} disabled={!walletAddress || loading} variant="outline">
+          Create Vault
+        </Button>
       </div>
       {txInit && (
         <div className="mt-2">
@@ -50,7 +52,14 @@ export function VaultSetupCard() {
       )}
 
       <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
+      <BorderBeam
+        duration={6}
+        delay={3}
+        size={400}
+        borderWidth={2}
+        colorFrom="#EDEDD0"
+        colorTo="#EDEDD0"
+      />
     </div>
   );
 }

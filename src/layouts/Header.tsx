@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { useWalletContext } from "@/providers/wallet.provider";
-import { useWalletKit } from "@/hooks/stellar/use-wallet-kit";
-import { Button } from "@/components/ui/button";
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-import { toast } from "sonner";
-import { LogOut } from "lucide-react";
+import Link from 'next/link';
+import Image from 'next/image';
+import { useWalletContext } from '@/providers/wallet.provider';
+import { useWalletKit } from '@/hooks/stellar/use-wallet-kit';
+import { Button } from '@/components/ui/button';
+import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
+import { toast } from 'sonner';
+import { LogOut } from 'lucide-react';
 
 function truncateAddress(addr: string, size = 4) {
   return `${addr.slice(0, 4)}...${addr.slice(-size)}`;
@@ -59,11 +59,9 @@ export function SiteHeader() {
               onClick={async () => {
                 try {
                   await connectWithWalletKit();
-                  toast.success("Wallet connected");
+                  toast.success('Wallet connected');
                 } catch (e) {
-                  toast.error(
-                    e instanceof Error ? e.message : "Failed to connect"
-                  );
+                  toast.error(e instanceof Error ? e.message : 'Failed to connect');
                 }
               }}
             >
@@ -80,7 +78,7 @@ export function SiteHeader() {
                 variant="outline"
                 onClick={() => {
                   clearWalletInfo();
-                  toast.info("Disconnected");
+                  toast.info('Disconnected');
                 }}
               >
                 Disconnect
@@ -93,7 +91,7 @@ export function SiteHeader() {
                 variant="outline"
                 onClick={() => {
                   clearWalletInfo();
-                  toast.info("Disconnected");
+                  toast.info('Disconnected');
                 }}
               >
                 <LogOut className="h-4 w-4" />

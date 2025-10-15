@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getEnvDefaults } from "@/lib/env";
-import { useWalletContext } from "@/providers/wallet.provider";
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { getEnvDefaults } from '@/lib/env';
+import { useWalletContext } from '@/providers/wallet.provider';
 
 type DidContextValue = {
   ownerDid: string | null;
@@ -11,12 +11,12 @@ type DidContextValue = {
 
 const DidContext = createContext<DidContextValue | undefined>(undefined);
 
-function detectNetworkTag(rpcUrl: string, networkPassphrase: string): "testnet" | "public" {
+function detectNetworkTag(rpcUrl: string, networkPassphrase: string): 'testnet' | 'public' {
   const isTestnet = /testnet/i.test(rpcUrl) || /Test SDF Network/i.test(networkPassphrase);
-  return isTestnet ? "testnet" : "public";
+  return isTestnet ? 'testnet' : 'public';
 }
 
-export function makeDidForAddress(address: string, networkTag: "testnet" | "public"): string {
+export function makeDidForAddress(address: string, networkTag: 'testnet' | 'public'): string {
   return `did:pkh:stellar:${networkTag}:${address}`;
 }
 
@@ -29,16 +29,16 @@ export function DidProvider({ children }: { children: React.ReactNode }) {
     setOwnerDidState(did);
     try {
       if (did) {
-        localStorage.setItem("acta_owner_did", did);
+        localStorage.setItem('acta_owner_did', did);
       } else {
-        localStorage.removeItem("acta_owner_did");
+        localStorage.removeItem('acta_owner_did');
       }
     } catch (_) {}
   };
 
   // Initialize DID from wallet + env or from localStorage
   useEffect(() => {
-    const stored = typeof window !== "undefined" ? localStorage.getItem("acta_owner_did") : null;
+    const stored = typeof window !== 'undefined' ? localStorage.getItem('acta_owner_did') : null;
     if (stored) {
       setOwnerDidState(stored);
       return;
@@ -58,6 +58,6 @@ export function DidProvider({ children }: { children: React.ReactNode }) {
 
 export function useDidContext(): DidContextValue {
   const ctx = useContext(DidContext);
-  if (!ctx) throw new Error("useDidContext must be used within DidProvider");
+  if (!ctx) throw new Error('useDidContext must be used within DidProvider');
   return ctx;
 }

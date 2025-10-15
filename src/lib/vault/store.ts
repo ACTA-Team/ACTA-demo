@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import * as StellarSdk from "@stellar/stellar-sdk";
-import { getEnvDefaults } from "@/lib/env";
-import { mapContractErrorToMessage } from "@/lib/utils";
+import * as StellarSdk from '@stellar/stellar-sdk';
+import { getEnvDefaults } from '@/lib/env';
+import { mapContractErrorToMessage } from '@/lib/utils';
 
 type StoreParams = {
   owner: string;
@@ -18,21 +18,27 @@ async function waitForTx(server: StellarSdk.rpc.Server, hash: string): Promise<v
   for (let i = 0; i < 30; i++) {
     const res = await server.getTransaction(hash);
     const status = (res as { status: string }).status;
-    if (status === "SUCCESS") return;
-    if (status === "FAILED") throw new Error(mapContractErrorToMessage("FAILED"));
+    if (status === 'SUCCESS') return;
+    if (status === 'FAILED') throw new Error(mapContractErrorToMessage('FAILED'));
     await new Promise((r) => setTimeout(r, 1000));
   }
 }
 
-export async function storeVcSingleCall({ owner, vcId, didUri, fields, signTransaction }: StoreParams): Promise<StoreResult> {
+export async function storeVcSingleCall({
+  owner,
+  vcId,
+  didUri,
+  fields,
+  signTransaction,
+}: StoreParams): Promise<StoreResult> {
   const { apiBaseUrl, rpcUrl, networkPassphrase } = getEnvDefaults();
 
   const server = new StellarSdk.rpc.Server(rpcUrl);
 
   // 1) Prepare unsigned XDR in the API from normal form fields
   const prepResp = await fetch(`${apiBaseUrl}/tx/prepare/store`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ owner, vcId, didUri, fields }),
   });
   if (!prepResp.ok) {
@@ -47,8 +53,8 @@ export async function storeVcSingleCall({ owner, vcId, didUri, fields, signTrans
 
   // 3) Submit to API using the user-signed flow
   const resp = await fetch(`${apiBaseUrl}/vault/store`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr, vcId }),
   });
   if (!resp.ok) {

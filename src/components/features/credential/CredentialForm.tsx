@@ -1,58 +1,58 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { BorderBeam } from "@/components/ui/border-beam";
-import { useWalletContext } from "@/providers/wallet.provider";
-import { useDidContext } from "@/providers/did.provider";
-import { storeVcSingleCall } from "@/lib/vault/store";
-import { getEnvDefaults } from "@/lib/env";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { BorderBeam } from '@/components/ui/border-beam';
+import { useWalletContext } from '@/providers/wallet.provider';
+import { useDidContext } from '@/providers/did.provider';
+import { storeVcSingleCall } from '@/lib/vault/store';
+import { getEnvDefaults } from '@/lib/env';
+import { toast } from 'sonner';
 
 export function CredentialForm() {
   const { walletAddress, signTransaction } = useWalletContext();
   const { ownerDid } = useDidContext();
   const { issuanceContractId, rpcUrl, networkPassphrase } = getEnvDefaults();
 
-  const [vcId, setVcId] = useState("");
-  const [issuerName, setIssuerName] = useState("");
-  const [subjectDid, setSubjectDid] = useState("");
-  const [degreeType, setDegreeType] = useState("");
-  const [degreeName, setDegreeName] = useState("");
-  const [validFrom, setValidFrom] = useState("");
+  const [vcId, setVcId] = useState('');
+  const [issuerName, setIssuerName] = useState('');
+  const [subjectDid, setSubjectDid] = useState('');
+  const [degreeType, setDegreeType] = useState('');
+  const [degreeName, setDegreeName] = useState('');
+  const [validFrom, setValidFrom] = useState('');
   const [txId, setTxId] = useState<string | null>(null);
 
   const handleCreate = async () => {
     if (!walletAddress) {
-      toast.error("Connect your wallet first");
+      toast.error('Connect your wallet first');
       return;
     }
     if (!ownerDid) {
-      toast.error("Owner DID is required. Create it first.");
+      toast.error('Owner DID is required. Create it first.');
       return;
     }
     if (!issuanceContractId) {
-      toast.error("Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local");
+      toast.error('Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local');
       return;
     }
     if (!vcId || !issuerName || !subjectDid || !degreeType || !degreeName || !validFrom) {
-      toast.error("Please complete all fields");
+      toast.error('Please complete all fields');
       return;
     }
     if (!signTransaction) {
-      toast.error("Signer unavailable");
+      toast.error('Signer unavailable');
       return;
     }
-    toast.info("Signing and submitting...");
+    toast.info('Signing and submitting...');
     setTxId(null);
     try {
       const vc = {
-        "@context": [
-          "https://www.w3.org/ns/credentials/v2",
-          "https://www.w3.org/ns/credentials/examples/v2",
+        '@context': [
+          'https://www.w3.org/ns/credentials/v2',
+          'https://www.w3.org/ns/credentials/examples/v2',
         ],
         id: vcId,
-        type: ["VerifiableCredential", "ExampleDegreeCredential"],
+        type: ['VerifiableCredential', 'ExampleDegreeCredential'],
         issuer: { id: ownerDid, name: issuerName },
         validFrom,
         credentialSubject: {
@@ -60,14 +60,13 @@ export function CredentialForm() {
           degree: { type: degreeType, name: degreeName },
         },
         proof: {
-          type: "DataIntegrityProof",
+          type: 'DataIntegrityProof',
           created: new Date().toISOString(),
-          verificationMethod:
-            "did:key:zDnaebSRtPnW6YCpxAhR5JPxJqt9UunCsBPhLEtUokUvp87nQ",
-          cryptosuite: "ecdsa-rdfc-2019",
-          proofPurpose: "assertionMethod",
+          verificationMethod: 'did:key:zDnaebSRtPnW6YCpxAhR5JPxJqt9UunCsBPhLEtUokUvp87nQ',
+          cryptosuite: 'ecdsa-rdfc-2019',
+          proofPurpose: 'assertionMethod',
           proofValue:
-            "z35CwmxThsUQ4t79JfacmMcw4y1kCqtD4rKqUooKM2NyKwdF5jmXMRo9oGnzHerf8hfQiWkEReycSXC2NtRrdMZN4",
+            'z35CwmxThsUQ4t79JfacmMcw4y1kCqtD4rKqUooKM2NyKwdF5jmXMRo9oGnzHerf8hfQiWkEReycSXC2NtRrdMZN4',
         },
       };
 
@@ -90,15 +89,17 @@ export function CredentialForm() {
       });
       setTxId(result.txId);
       const isTestnet = /testnet/i.test(rpcUrl) || /Test SDF Network/i.test(networkPassphrase);
-      const explorerBase = isTestnet ? "https://stellar.expert/explorer/testnet" : "https://stellar.expert/explorer/public";
+      const explorerBase = isTestnet
+        ? 'https://stellar.expert/explorer/testnet'
+        : 'https://stellar.expert/explorer/public';
       const explorerUrl = `${explorerBase}/tx/${result.txId}`;
-      toast.success("Credential created", {
+      toast.success('Credential created', {
         description: `Tx: ${result.txId}`,
         action: {
-          label: "View on Stellar Expert",
+          label: 'View on Stellar Expert',
           onClick: () => {
             try {
-              window.open(explorerUrl, "_blank", "noopener,noreferrer");
+              window.open(explorerUrl, '_blank', 'noopener,noreferrer');
             } catch (_) {
               window.location.href = explorerUrl;
             }
@@ -112,12 +113,12 @@ export function CredentialForm() {
   };
 
   const fillExample = () => {
-    setVcId("http://university.example/credentials/3732");
-    setIssuerName("Example University");
-    setSubjectDid("did:example:ebfeb1f712ebc6f1c276e12ec21");
-    setDegreeType("ExampleBachelorDegree");
-    setDegreeName("Bachelor of Science and Arts");
-    setValidFrom("2010-01-01T19:23:24Z");
+    setVcId('http://university.example/credentials/3732');
+    setIssuerName('Example University');
+    setSubjectDid('did:example:ebfeb1f712ebc6f1c276e12ec21');
+    setDegreeType('ExampleBachelorDegree');
+    setDegreeName('Bachelor of Science and Arts');
+    setValidFrom('2010-01-01T19:23:24Z');
   };
 
   return (
@@ -129,15 +130,13 @@ export function CredentialForm() {
       ) : (
         <div className="relative overflow-hidden rounded border p-3 md:p-4 space-y-3">
           <div className="flex justify-end">
-            <Button variant="outline" onClick={fillExample}>Fill Example</Button>
+            <Button variant="outline" onClick={fillExample}>
+              Fill Example
+            </Button>
           </div>
           <div>
             <label className="text-sm">Owner DID</label>
-            <input
-              className="w-full border rounded p-2"
-              value={ownerDid || ""}
-              readOnly
-            />
+            <input className="w-full border rounded p-2" value={ownerDid || ''} readOnly />
           </div>
           <div>
             <label className="text-sm">Credential ID</label>
@@ -197,7 +196,9 @@ export function CredentialForm() {
             </div>
           </div>
           <div className="pt-2">
-            <Button onClick={handleCreate} variant="outline" disabled={!walletAddress}>Create Credential</Button>
+            <Button onClick={handleCreate} variant="outline" disabled={!walletAddress}>
+              Create Credential
+            </Button>
           </div>
 
           {txId && (
@@ -207,7 +208,14 @@ export function CredentialForm() {
           )}
 
           <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-          <BorderBeam duration={6} delay={3} size={400} borderWidth={2} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
+          <BorderBeam
+            duration={6}
+            delay={3}
+            size={400}
+            borderWidth={2}
+            colorFrom="#EDEDD0"
+            colorTo="#EDEDD0"
+          />
         </div>
       )}
     </section>

@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import * as StellarSdk from "@stellar/stellar-sdk";
-import { useCallback, useState } from "react";
-import { getEnvDefaults } from "@/lib/env";
-import { useWalletContext } from "@/providers/wallet.provider";
-import { mapContractErrorToMessage } from "@/lib/utils";
+import * as StellarSdk from '@stellar/stellar-sdk';
+import { useCallback, useState } from 'react';
+import { getEnvDefaults } from '@/lib/env';
+import { useWalletContext } from '@/providers/wallet.provider';
+import { mapContractErrorToMessage } from '@/lib/utils';
 
 async function waitForTx(server: StellarSdk.rpc.Server, hash: string): Promise<void> {
   for (let i = 0; i < 40; i++) {
     try {
       const res = await server.getTransaction(hash);
       const status = (res as { status: string }).status;
-      if (status === "SUCCESS") return;
-      if (status === "FAILED") throw new Error(mapContractErrorToMessage("FAILED"));
+      if (status === 'SUCCESS') return;
+      if (status === 'FAILED') throw new Error(mapContractErrorToMessage('FAILED'));
     } catch (_) {}
     await new Promise((r) => setTimeout(r, 1200));
   }
@@ -25,9 +25,9 @@ export function useVault() {
 
   const createVault = useCallback(
     async (didUri: string) => {
-      if (!walletAddress) throw new Error("Connect your wallet first");
-      if (!vaultContractId) throw new Error("Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local");
-      if (!signTransaction) throw new Error("Signer unavailable");
+      if (!walletAddress) throw new Error('Connect your wallet first');
+      if (!vaultContractId) throw new Error('Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local');
+      if (!signTransaction) throw new Error('Signer unavailable');
 
       setLoading(true);
       try {
@@ -42,7 +42,7 @@ export function useVault() {
         })
           .addOperation(
             contract.call(
-              "initialize",
+              'initialize',
               StellarSdk.Address.fromString(walletAddress).toScVal(),
               StellarSdk.xdr.ScVal.scvString(didUri)
             )
@@ -55,21 +55,27 @@ export function useVault() {
         const signed = StellarSdk.TransactionBuilder.fromXDR(signedXdr, networkPassphrase);
         const send = await server.sendTransaction(signed);
         if (send.errorResult) {
-          let errStr = "unknown";
+          let errStr = 'unknown';
           try {
             errStr = (send.errorResult as any).result().toString();
           } catch {
             try {
-              errStr = (send.errorResult as any).toXDR().toString("base64");
-            } catch { errStr = "[unavailable error details]"; }
+              errStr = (send.errorResult as any).toXDR().toString('base64');
+            } catch {
+              errStr = '[unavailable error details]';
+            }
           }
           const friendly = mapContractErrorToMessage(errStr);
           throw new Error(friendly);
         }
-        if (send.status === "PENDING" || send.status === "DUPLICATE" || send.status === "TRY_AGAIN_LATER") {
+        if (
+          send.status === 'PENDING' ||
+          send.status === 'DUPLICATE' ||
+          send.status === 'TRY_AGAIN_LATER'
+        ) {
           await waitForTx(server, send.hash!);
-        } else if (send.status === "ERROR") {
-          throw new Error(mapContractErrorToMessage("ERROR"));
+        } else if (send.status === 'ERROR') {
+          throw new Error(mapContractErrorToMessage('ERROR'));
         }
         return { txId: send.hash! };
       } catch (e: unknown) {
@@ -84,9 +90,9 @@ export function useVault() {
   );
 
   const authorizeSelf = useCallback(async () => {
-    if (!walletAddress) throw new Error("Connect your wallet first");
-    if (!vaultContractId) throw new Error("Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local");
-    if (!signTransaction) throw new Error("Signer unavailable");
+    if (!walletAddress) throw new Error('Connect your wallet first');
+    if (!vaultContractId) throw new Error('Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local');
+    if (!signTransaction) throw new Error('Signer unavailable');
     setLoading(true);
     try {
       const server = new StellarSdk.rpc.Server(rpcUrl);
@@ -100,7 +106,7 @@ export function useVault() {
       })
         .addOperation(
           contract.call(
-            "authorize_issuer",
+            'authorize_issuer',
             StellarSdk.Address.fromString(walletAddress).toScVal(),
             StellarSdk.Address.fromString(walletAddress).toScVal()
           )
@@ -113,21 +119,27 @@ export function useVault() {
       const signed = StellarSdk.TransactionBuilder.fromXDR(signedXdr, networkPassphrase);
       const send = await server.sendTransaction(signed);
       if (send.errorResult) {
-        let errStr = "unknown";
+        let errStr = 'unknown';
         try {
           errStr = (send.errorResult as any).result().toString();
         } catch {
           try {
-            errStr = (send.errorResult as any).toXDR().toString("base64");
-          } catch { errStr = "[unavailable error details]"; }
+            errStr = (send.errorResult as any).toXDR().toString('base64');
+          } catch {
+            errStr = '[unavailable error details]';
+          }
         }
         const friendly = mapContractErrorToMessage(errStr);
         throw new Error(friendly);
       }
-      if (send.status === "PENDING" || send.status === "DUPLICATE" || send.status === "TRY_AGAIN_LATER") {
+      if (
+        send.status === 'PENDING' ||
+        send.status === 'DUPLICATE' ||
+        send.status === 'TRY_AGAIN_LATER'
+      ) {
         await waitForTx(server, send.hash!);
-      } else if (send.status === "ERROR") {
-        throw new Error(mapContractErrorToMessage("ERROR"));
+      } else if (send.status === 'ERROR') {
+        throw new Error(mapContractErrorToMessage('ERROR'));
       }
       return { txId: send.hash! };
     } catch (e: unknown) {
