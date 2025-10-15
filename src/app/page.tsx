@@ -1,103 +1,132 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { useWalletContext } from "@/providers/wallet.provider";
+import { useWalletKit } from "@/hooks/stellar/use-wallet-kit";
+import { storeVcSingleCall } from "@/lib/vault/store";
+import { getEnvDefaults } from "@/lib/env";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const { walletAddress, signTransaction } = useWalletContext();
+  const { connectWithWalletKit } = useWalletKit();
+  const { issuanceContractId } = getEnvDefaults();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const [vcId, setVcId] = useState("");
+  const [didUri, setDidUri] = useState("");
+  // Normal form fields (no JSON input)
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [type, setType] = useState("");
+  const [expires, setExpires] = useState("");
+  const [status, setStatus] = useState<string | null>(null);
+  const [txId, setTxId] = useState<string | null>(null);
+
+  const handleConnect = async () => {
+    await connectWithWalletKit();
+  };
+
+  const handleStore = async () => {
+    if (!walletAddress) {
+      setStatus("Connect your wallet first");
+      return;
+    }
+    if (!issuanceContractId) {
+      setStatus("Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local");
+      return;
+    }
+    if (!vcId || !didUri) {
+      setStatus("Fill vcId and DID");
+      return;
+    }
+    // Basic form validation
+    if (!firstName || !lastName) {
+      setStatus("Fill first name and last name");
+      return;
+    }
+    if (!signTransaction) {
+      setStatus("Signer unavailable");
+      return;
+    }
+    setStatus("Signing and submitting...");
+    toast.info("Signing and submitting...");
+    setTxId(null);
+    try {
+      const fields = { firstName, lastName, email, type, expires };
+      const result = await storeVcSingleCall({
+        owner: walletAddress,
+        vcId,
+        didUri,
+        fields,
+        signTransaction: (xdr, opts) => signTransaction(xdr, opts),
+      });
+      setTxId(result.txId);
+      setStatus("Submitted. Waiting for confirmation...");
+      toast.success("Transaction submitted");
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      setStatus(msg);
+      toast.error(msg);
+    }
+  };
+
+  return (
+    <section className="container mx-auto max-w-2xl px-4 py-8">
+      <h1 className="text-2xl font-semibold mb-4">Store Credential in Vault</h1>
+      {!walletAddress ? (
+        <div className="rounded border p-4">
+          <p className="text-sm">Connect your wallet in the header to begin.</p>
+          <div className="mt-3">
+            <Button onClick={handleConnect}>Connect Wallet</Button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      ) : (
+        <div className="rounded border p-4 space-y-3">
+          <div>
+            <label className="text-sm">VC ID</label>
+            <input className="w-full border rounded p-2" value={vcId} onChange={e => setVcId(e.target.value)} placeholder="vc-123" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="text-sm">First name</label>
+              <input className="w-full border rounded p-2" value={firstName} onChange={e => setFirstName(e.target.value)} placeholder="John" />
+            </div>
+            <div>
+              <label className="text-sm">Last name</label>
+              <input className="w-full border rounded p-2" value={lastName} onChange={e => setLastName(e.target.value)} placeholder="Doe" />
+            </div>
+            <div>
+              <label className="text-sm">Email</label>
+              <input className="w-full border rounded p-2" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="john@example.com" />
+            </div>
+            <div>
+              <label className="text-sm">Credential type</label>
+              <input className="w-full border rounded p-2" value={type} onChange={e => setType(e.target.value)} placeholder="Attestation" />
+            </div>
+            <div>
+              <label className="text-sm">Expires (YYYY-MM-DD)</label>
+              <input className="w-full border rounded p-2" type="date" value={expires} onChange={e => setExpires(e.target.value)} />
+            </div>
+          </div>
+          <div>
+            <label className="text-sm">Issuer DID</label>
+            <input className="w-full border rounded p-2" value={didUri} onChange={e => setDidUri(e.target.value)} placeholder="did:pkh:stellar:testnet:G..." />
+          </div>
+          <div className="pt-2">
+            <Button onClick={handleStore}>Store in Vault (user-signed)</Button>
+          </div>
+
+          {status && <p className="mt-3 text-sm">{status}</p>}
+          {txId && (
+            <div className="mt-2">
+              <p className="text-sm">Tx ID:</p>
+              <p className="text-xs font-mono break-all">{txId}</p>
+            </div>
+          )}
+        </div>
+      )}
+    </section>
   );
 }
