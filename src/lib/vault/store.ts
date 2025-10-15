@@ -2,12 +2,13 @@
 
 import * as StellarSdk from "@stellar/stellar-sdk";
 import { getEnvDefaults } from "@/lib/env";
+import { mapContractErrorToMessage } from "@/lib/utils";
 
 type StoreParams = {
   owner: string;
   vcId: string;
-  didUri: string; // DID del issuer
-  fields: Record<string, string>; // Campos normales del formulario
+  didUri: string; // Owner DID (vault-scoped DID)
+  fields: Record<string, string>; // Normal form fields
   signTransaction: (xdr: string, options: { networkPassphrase: string }) => Promise<string>;
 };
 
@@ -18,7 +19,7 @@ async function waitForTx(server: StellarSdk.rpc.Server, hash: string): Promise<v
     const res = await server.getTransaction(hash);
     const status = (res as { status: string }).status;
     if (status === "SUCCESS") return;
-    if (status === "FAILED") throw new Error("Transaction failed");
+    if (status === "FAILED") throw new Error(mapContractErrorToMessage("FAILED"));
     await new Promise((r) => setTimeout(r, 1000));
   }
 }
@@ -28,7 +29,7 @@ export async function storeVcSingleCall({ owner, vcId, didUri, fields, signTrans
 
   const server = new StellarSdk.rpc.Server(rpcUrl);
 
-  // 1) Preparar XDR en la API a partir de campos normales
+  // 1) Prepare unsigned XDR in the API from normal form fields
   const prepResp = await fetch(`${apiBaseUrl}/tx/prepare/store`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -36,14 +37,15 @@ export async function storeVcSingleCall({ owner, vcId, didUri, fields, signTrans
   });
   if (!prepResp.ok) {
     const err = await prepResp.json().catch(() => ({}));
-    throw new Error(err?.message || `API error: ${prepResp.status}`);
+    const friendly = mapContractErrorToMessage(err?.message || `API error: ${prepResp.status}`);
+    throw new Error(friendly);
   }
   const prepJson = (await prepResp.json()) as { unsignedXdr: string };
 
-  // 2) Firmar con la wallet conectada
+  // 2) Sign with the connected wallet
   const signedXdr = await signTransaction(prepJson.unsignedXdr, { networkPassphrase });
 
-  // 3) Enviar a API en flujo user-signed
+  // 3) Submit to API using the user-signed flow
   const resp = await fetch(`${apiBaseUrl}/vault/store`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -51,7 +53,8 @@ export async function storeVcSingleCall({ owner, vcId, didUri, fields, signTrans
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
-    throw new Error(err?.message || `API error: ${resp.status}`);
+    const friendly = mapContractErrorToMessage(err?.message || `API error: ${resp.status}`);
+    throw new Error(friendly);
   }
   const json = (await resp.json()) as { tx_id: string };
 

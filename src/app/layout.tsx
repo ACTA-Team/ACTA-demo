@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { WalletProvider } from "@/providers/wallet.provider";
+import { DidProvider } from "@/providers/did.provider";
 import { AppThemeProvider } from "@/providers/theme.provider";
 import { SiteHeader } from "@/layouts/Header";
 import { Toaster } from "@/components/ui/sonner";
@@ -34,9 +35,11 @@ export default function RootLayout({
       >
         <AppThemeProvider>
           <WalletProvider>
-            <SiteHeader />
-            <main className="min-h-screen">{children}</main>
-            <Toaster richColors position="top-right" />
+            <DidProvider>
+              <SiteHeader />
+              <main className="min-h-screen">{children}</main>
+              <Toaster richColors position="top-right" />
+            </DidProvider>
           </WalletProvider>
         </AppThemeProvider>
       </body>
