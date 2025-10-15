@@ -3,6 +3,7 @@
 import { useWalletContext } from "@/providers/wallet.provider";
 import { useDid } from "@/hooks/did/use-did";
 import { Button } from "@/components/ui/button";
+import { BorderBeam } from "@/components/ui/border-beam";
 import { toast } from "sonner";
 
 export function DidCard() {
@@ -32,6 +33,9 @@ export function DidCard() {
       <div className="pt-2 flex gap-2">
         <Button onClick={onSave} disabled={!walletAddress}>Compute & Save DID</Button>
       </div>
+
+      <BorderBeam duration={6} size={400} className="from-transparent via-red-500 to-transparent" />
+      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-blue-500 to-transparent" />
     </div>
   );
 }

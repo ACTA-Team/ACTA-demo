@@ -6,6 +6,7 @@ import { useWalletContext } from "@/providers/wallet.provider";
 import { useDid } from "@/hooks/did/use-did";
 import { useVault } from "@/hooks/vault/use-vault";
 import { toast } from "sonner";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 export function VaultSetupCard() {
   const { walletAddress } = useWalletContext();
@@ -47,6 +48,9 @@ export function VaultSetupCard() {
           <p className="text-xs font-mono break-all">{txInit}</p>
         </div>
       )}
+
+      <BorderBeam duration={6} size={400} className="from-transparent via-red-500 to-transparent" />
+      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-blue-500 to-transparent" />
     </div>
   );
 }
