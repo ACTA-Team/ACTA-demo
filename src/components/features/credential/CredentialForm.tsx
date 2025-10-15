@@ -129,7 +129,7 @@ export function CredentialForm() {
       ) : (
         <div className="relative overflow-hidden rounded border p-4 space-y-3">
           <div className="flex justify-end">
-            <Button variant="secondary" onClick={fillExample}>Fill Example</Button>
+            <Button variant="outline" onClick={fillExample}>Fill Example</Button>
           </div>
           <div>
             <label className="text-sm">Owner DID</label>
@@ -197,7 +197,7 @@ export function CredentialForm() {
             </div>
           </div>
           <div className="pt-2">
-            <Button onClick={handleCreate}>Create Credential</Button>
+            <Button onClick={handleCreate} variant="outline" disabled={!walletAddress}>Create Credential</Button>
           </div>
 
           {txId && (
@@ -206,8 +206,8 @@ export function CredentialForm() {
             </div>
           )}
 
-          <BorderBeam duration={6} size={400} className="from-transparent via-red-500 to-transparent" />
-          <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-blue-500 to-transparent" />
+          <BorderBeam duration={6} size={400} className="from-transparent via-neutral-500 to-transparent" />
+          <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-neutral-500 to-transparent" />
         </div>
       )}
     </section>

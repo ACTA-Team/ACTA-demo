@@ -38,7 +38,7 @@ export default function RootLayout({
             <DidProvider>
               <SiteHeader />
               <main className="min-h-screen">{children}</main>
-              <Toaster richColors position="bottom-right" />
+              <Toaster position="bottom-right" />
             </DidProvider>
           </WalletProvider>
         </AppThemeProvider>

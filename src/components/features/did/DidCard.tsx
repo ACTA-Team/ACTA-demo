@@ -31,11 +31,11 @@ export function DidCard() {
         <p className="text-xs font-mono break-all">{ownerDid || "—"}</p>
       </div>
       <div className="pt-2 flex gap-2">
-        <Button onClick={onSave} disabled={!walletAddress}>Compute & Save DID</Button>
+        <Button onClick={onSave} disabled={!walletAddress} variant="outline">Compute & Save DID</Button>
       </div>
 
-      <BorderBeam duration={6} size={400} className="from-transparent via-red-500 to-transparent" />
-      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-blue-500 to-transparent" />
+      <BorderBeam duration={6} size={400} className="from-transparent via-neutral-500 to-transparent" />
+      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-neutral-500 to-transparent" />
     </div>
   );
 }

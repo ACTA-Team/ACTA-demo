@@ -40,7 +40,7 @@ export function VaultSetupCard() {
         <p className="text-xs font-mono break-all">{ownerDid || "—"}</p>
       </div>
       <div className="flex gap-2 pt-2">
-        <Button onClick={doCreateVault} disabled={!walletAddress || loading} variant="secondary">Create Vault</Button>
+        <Button onClick={doCreateVault} disabled={!walletAddress || loading} variant="outline">Create Vault</Button>
       </div>
       {txInit && (
         <div className="mt-2">
@@ -49,8 +49,8 @@ export function VaultSetupCard() {
         </div>
       )}
 
-      <BorderBeam duration={6} size={400} className="from-transparent via-red-500 to-transparent" />
-      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-blue-500 to-transparent" />
+      <BorderBeam duration={6} size={400} className="from-transparent via-neutral-500 to-transparent" />
+      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-neutral-500 to-transparent" />
     </div>
   );
 }
