@@ -34,8 +34,8 @@ export function DidCard() {
         <Button onClick={onSave} disabled={!walletAddress} variant="outline">Compute & Save DID</Button>
       </div>
 
-      <BorderBeam duration={6} size={400} className="from-transparent via-neutral-500 to-transparent" />
-      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} className="from-transparent via-neutral-500 to-transparent" />
+      <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
+      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
     </div>
   );
 }
