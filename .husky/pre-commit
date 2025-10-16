@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Husky: running format, lint and build before commit..."
+
+# Format all files (requested) and re-stage changes
+npm run format || exit 1
+git add -A || exit 1
+
+# Lint the project
+npm run lint || exit 1
+
+# Build to catch type/errors before commit
+npm run build || exit 1
+
+echo "Husky: checks passed. Proceeding with commit."
