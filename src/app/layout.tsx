@@ -5,6 +5,7 @@ import { WalletProvider } from '@/providers/wallet.provider';
 import { DidProvider } from '@/providers/did.provider';
 import { AppThemeProvider } from '@/providers/theme.provider';
 import { SiteHeader } from '@/layouts/Header';
+import { SiteFooter } from '@/layouts/Footer';
 import { Toaster } from '@/components/ui/sonner';
 
 const geistSans = Geist({
@@ -38,6 +39,7 @@ export default function RootLayout({
             <DidProvider>
               <SiteHeader />
               <main className="min-h-screen">{children}</main>
+              <SiteFooter />
               <Toaster position="bottom-right" />
             </DidProvider>
           </WalletProvider>
