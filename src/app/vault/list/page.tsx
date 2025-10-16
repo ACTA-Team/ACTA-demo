@@ -45,7 +45,9 @@ export default function VaultListPage() {
     <section className="container mx-auto max-w-2xl px-4 py-8">
       <div className="space-y-4">
         <h1 className="text-xl font-semibold">List VC IDs</h1>
-        <p className="text-sm text-muted-foreground">List the IDs of your credentials (owner signature required).</p>
+        <p className="text-sm text-muted-foreground">
+          List the IDs of your credentials (owner signature required).
+        </p>
         <div className="flex items-center gap-2">
           <Button onClick={handleList} disabled={loading} variant="outline">
             {loading ? 'Listing…' : 'List IDs'}
@@ -60,13 +62,22 @@ export default function VaultListPage() {
             <h2 className="text-sm font-medium">Found IDs</h2>
             <ul className="space-y-2">
               {ids.map((id) => (
-                <li key={id} className="text-xs font-mono break-all">{id}</li>
+                <li key={id} className="text-xs font-mono break-all">
+                  {id}
+                </li>
               ))}
             </ul>
 
             {/* Animated border */}
             <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-            <BorderBeam duration={6} delay={3} size={400} borderWidth={2} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
+            <BorderBeam
+              duration={6}
+              delay={3}
+              size={400}
+              borderWidth={2}
+              colorFrom="#EDEDD0"
+              colorTo="#EDEDD0"
+            />
           </div>
         )}
       </div>

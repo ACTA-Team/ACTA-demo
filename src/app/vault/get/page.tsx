@@ -50,7 +50,9 @@ export default function VaultGetPage() {
     <section className="container mx-auto max-w-2xl px-4 py-8">
       <div className="space-y-4">
         <h1 className="text-xl font-semibold">Get credential (VC)</h1>
-        <p className="text-sm text-muted-foreground">Fetch a credential from your Vault by ID (owner signature required).</p>
+        <p className="text-sm text-muted-foreground">
+          Fetch a credential from your Vault by ID (owner signature required).
+        </p>
         <div className="flex items-center gap-2">
           <input
             className="flex-1 rounded border px-2 py-1 text-sm"

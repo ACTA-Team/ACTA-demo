@@ -1,6 +1,11 @@
 'use client';
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { BorderBeam } from '@/components/ui/border-beam';
 import { cn } from '@/lib/utils';
 
@@ -31,16 +36,24 @@ function buildSummary(record: VcRecord) {
   const vcInner = meta?.vcData ? safeParseJson(meta.vcData) : null;
 
   const issuerName = (meta?.issuerName as string) || (vcInner?.issuer?.name as string) || '—';
-  const subjectDid = (meta?.subjectDid as string) || (vcInner?.credentialSubject?.id as string) || '—';
-  const degreeType = (meta?.degreeType as string) || (vcInner?.credentialSubject?.degree?.type as string) || '—';
-  const degreeName = (meta?.degreeName as string) || (vcInner?.credentialSubject?.degree?.name as string) || '—';
-  const validFrom = (meta?.validFrom as string) || (vcInner?.validFrom as string) || (vcInner?.issuanceDate as string) || '—';
+  const subjectDid =
+    (meta?.subjectDid as string) || (vcInner?.credentialSubject?.id as string) || '—';
+  const degreeType =
+    (meta?.degreeType as string) || (vcInner?.credentialSubject?.degree?.type as string) || '—';
+  const degreeName =
+    (meta?.degreeName as string) || (vcInner?.credentialSubject?.degree?.name as string) || '—';
+  const validFrom =
+    (meta?.validFrom as string) ||
+    (vcInner?.validFrom as string) ||
+    (vcInner?.issuanceDate as string) ||
+    '—';
 
   return { issuerName, subjectDid, degreeType, degreeName, validFrom, meta, vcInner };
 }
 
 export function VcCard({ record, className }: { record: VcRecord; className?: string }) {
-  const { issuerName, subjectDid, degreeType, degreeName, validFrom, meta, vcInner } = buildSummary(record);
+  const { issuerName, subjectDid, degreeType, degreeName, validFrom, meta, vcInner } =
+    buildSummary(record);
   const id = record.id || '—';
   const issuerDid = record.issuer_did || '—';
   const contractId = record.issuance_contract || '—';
@@ -94,12 +107,16 @@ export function VcCard({ record, className }: { record: VcRecord; className?: st
             <div className="space-y-2">
               <div>
                 <p className="text-xs text-muted-foreground">Meta</p>
-                <pre className="text-[11px] whitespace-pre-wrap break-words">{JSON.stringify(meta ?? {}, null, 2)}</pre>
+                <pre className="text-[11px] whitespace-pre-wrap break-words">
+                  {JSON.stringify(meta ?? {}, null, 2)}
+                </pre>
               </div>
               {vcInner && (
                 <div>
                   <p className="text-xs text-muted-foreground">VC (JSON)</p>
-                  <pre className="text-[11px] whitespace-pre-wrap break-words">{JSON.stringify(vcInner, null, 2)}</pre>
+                  <pre className="text-[11px] whitespace-pre-wrap break-words">
+                    {JSON.stringify(vcInner, null, 2)}
+                  </pre>
                 </div>
               )}
             </div>
@@ -108,7 +125,14 @@ export function VcCard({ record, className }: { record: VcRecord; className?: st
       </Accordion>
 
       <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-      <BorderBeam duration={6} delay={3} size={400} borderWidth={2} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
+      <BorderBeam
+        duration={6}
+        delay={3}
+        size={400}
+        borderWidth={2}
+        colorFrom="#EDEDD0"
+        colorTo="#EDEDD0"
+      />
     </div>
   );
 }

@@ -8,7 +8,10 @@ type ListParams = {
   signTransaction: (xdr: string, options: { networkPassphrase: string }) => Promise<string>;
 };
 
-export async function listVcIdsSingleCall({ owner, signTransaction }: ListParams): Promise<string[]> {
+export async function listVcIdsSingleCall({
+  owner,
+  signTransaction,
+}: ListParams): Promise<string[]> {
   const { apiBaseUrl, networkPassphrase } = getEnvDefaults();
 
   // 1) Prepare unsigned XDR

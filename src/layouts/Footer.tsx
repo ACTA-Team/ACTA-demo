@@ -10,7 +10,6 @@ export function SiteFooter() {
     <footer className="border-t bg-background">
       <div className="container mx-auto px-4 py-10">
         <div className="grid gap-8 md:grid-cols-3 justify-items-center text-center">
-
           {/* Contact */}
           <div className="space-y-2">
             <h4 className="text-sm font-semibold">Contact</h4>
@@ -22,19 +21,34 @@ export function SiteFooter() {
             </p>
             <p className="text-sm text-muted-foreground">
               Website:{' '}
-              <Link href="https://acta.build" target="_blank" rel="noopener noreferrer" className="hover:underline">
+              <Link
+                href="https://acta.build"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
                 acta.build
               </Link>
             </p>
             <p className="text-sm text-muted-foreground">
               Documentation:{' '}
-              <Link href="https://docs.acta.build" target="_blank" rel="noopener noreferrer" className="hover:underline">
+              <Link
+                href="https://docs.acta.build"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
                 docs.acta.build
               </Link>
             </p>
             <p className="text-sm text-muted-foreground">
               GitHub:{' '}
-              <Link href="https://github.com/ACTA-Team" target="_blank" rel="noopener noreferrer" className="hover:underline">
+              <Link
+                href="https://github.com/ACTA-Team"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+              >
                 github.com/ACTA-Team
               </Link>
             </p>
