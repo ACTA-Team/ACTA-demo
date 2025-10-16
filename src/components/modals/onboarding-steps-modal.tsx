@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,8 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 type OnboardingStepsModalProps = {
   open: boolean;
@@ -35,10 +35,10 @@ export function OnboardingStepsModal({ open, onOpenChange }: OnboardingStepsModa
         <DialogHeader>
           <DialogTitle>Step {step}</DialogTitle>
           <DialogDescription>
-            {step === 1 && "Create your vault"}
-            {step === 2 && "Authorize your wallet in the vault"}
-            {step === 3 && "Create a credential"}
-            {step === 4 && "Get the credential information"}
+            {step === 1 && 'Create your vault'}
+            {step === 2 && 'Authorize your wallet in the vault'}
+            {step === 3 && 'Create a credential'}
+            {step === 4 && 'Get the credential information'}
           </DialogDescription>
         </DialogHeader>
         <div className="px-6">
