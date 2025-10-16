@@ -79,6 +79,36 @@ export default function Home() {
               </Button>
             )}
           </div>
+          <div className="rounded border p-3 md:p-4 space-y-2">
+            <h2 className="text-base font-medium">Vault: List VC IDs</h2>
+            <p className="text-xs text-muted-foreground">List your VC IDs stored in the vault.</p>
+            {walletAddress ? (
+              <Link href="/vault/list" className="mt-2 block w-full">
+                <Button className="w-full block" variant="outline">
+                  Go to List VC IDs
+                </Button>
+              </Link>
+            ) : (
+              <Button className="mt-2 w-full block" variant="outline" disabled>
+                Go to List VC IDs
+              </Button>
+            )}
+          </div>
+          <div className="rounded border p-3 md:p-4 space-y-2">
+            <h2 className="text-base font-medium">Vault: Get VC</h2>
+            <p className="text-xs text-muted-foreground">Fetch a VC from your vault by ID.</p>
+            {walletAddress ? (
+              <Link href="/vault/get" className="mt-2 block w-full">
+                <Button className="w-full block" variant="outline">
+                  Go to Get VC
+                </Button>
+              </Link>
+            ) : (
+              <Button className="mt-2 w-full block" variant="outline" disabled>
+                Go to Get VC
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </section>
