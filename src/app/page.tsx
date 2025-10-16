@@ -3,11 +3,19 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
+import * as React from 'react';
+import { OnboardingStepsModal } from '@/components/modals/onboarding-steps-modal';
 
 export default function Home() {
   const { walletAddress } = useWalletContext();
+  const [isOnboardingOpen, setIsOnboardingOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsOnboardingOpen(true);
+  }, []);
   return (
     <section className="container mx-auto max-w-3xl px-3 py-8 md:px-4 md:py-10">
+      <OnboardingStepsModal open={isOnboardingOpen} onOpenChange={setIsOnboardingOpen} />
       <div className="space-y-6">
         <h1 className="text-2xl font-semibold">ACTA Demo Flow</h1>
         <p className="text-sm text-muted-foreground">
