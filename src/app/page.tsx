@@ -22,8 +22,8 @@ export default function Home() {
             ACTA Demo Flow
           </h1>
           <p className="mt-4 text-base text-muted-foreground sm:text-lg">
-            This demo separates the flow into four steps: create a vault, authorize issuers, compute
-            the credential, and issue the credential.
+            This demo separates the flow into four steps: create a vault, <br /> authorize issuers,
+            compute the credential, and issue the credential.
           </p>
           <div className="mt-6 flex items-center gap-3">
             <Link
