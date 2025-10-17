@@ -23,7 +23,7 @@ export function AuthorizedIssuersCard() {
   };
 
   return (
-    <div className="rounded border p-4 space-y-3">
+    <div className="rounded border p-6 md:p-8 space-y-3">
       <div>
         <p className="text-sm">Wallet</p>
         <p className="text-xs font-mono break-all">{walletAddress || 'Not connected'}</p>

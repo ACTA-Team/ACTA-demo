@@ -43,7 +43,7 @@ export function SiteHeader() {
           <Image
             src="/white.png"
             alt="ACTA"
-            width={120}
+            width={60}
             height={32}
             className="hidden dark:block"
             priority
@@ -51,7 +51,7 @@ export function SiteHeader() {
           <Image
             src="/black.png"
             alt="ACTA"
-            width={120}
+            width={60}
             height={32}
             className="block dark:hidden"
             priority

@@ -119,93 +119,88 @@ export function CredentialForm() {
     setValidFrom('2010-01-01T19:23:24Z');
   };
 
-  return (
-    <section className="container mx-auto max-w-2xl px-3 py-6 md:px-4 md:py-8">
-      {!walletAddress ? (
-        <div className="min-h-[50vh] flex flex-col items-center justify-center text-center">
-          <p className="text-base">Connect your wallet to begin.</p>
+  return !walletAddress ? (
+    <div className="rounded border p-6 md:p-8 min-h-[20vh] flex flex-col items-center justify-center text-center">
+      <p className="text-base">Connect your wallet to begin.</p>
+    </div>
+  ) : (
+    <div className="rounded border p-6 md:p-8 space-y-4">
+      <div className="flex justify-end">
+        <Button variant="outline" onClick={fillExample}>
+          Fill Example
+        </Button>
+      </div>
+      <div>
+        <label className="text-sm">Owner DID</label>
+        <input className="w-full border rounded p-2" value={ownerDid || ''} readOnly />
+      </div>
+      <div>
+        <label className="text-sm">Credential ID</label>
+        <input
+          className="w-full border rounded p-2"
+          value={vcId}
+          onChange={(e) => setVcId(e.target.value)}
+          placeholder="http://university.example/credentials/3732"
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label className="text-sm">Issuer name</label>
+          <input
+            className="w-full border rounded p-2"
+            value={issuerName}
+            onChange={(e) => setIssuerName(e.target.value)}
+            placeholder="Example University"
+          />
         </div>
-      ) : (
-        <div className="rounded border p-3 md:p-4 space-y-3">
-          <div className="flex justify-end">
-            <Button variant="outline" onClick={fillExample}>
-              Fill Example
-            </Button>
-          </div>
-          <div>
-            <label className="text-sm">Owner DID</label>
-            <input className="w-full border rounded p-2" value={ownerDid || ''} readOnly />
-          </div>
-          <div>
-            <label className="text-sm">Credential ID</label>
-            <input
-              className="w-full border rounded p-2"
-              value={vcId}
-              onChange={(e) => setVcId(e.target.value)}
-              placeholder="http://university.example/credentials/3732"
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="text-sm">Issuer name</label>
-              <input
-                className="w-full border rounded p-2"
-                value={issuerName}
-                onChange={(e) => setIssuerName(e.target.value)}
-                placeholder="Example University"
-              />
-            </div>
-            <div>
-              <label className="text-sm">Valid from</label>
-              <input
-                className="w-full border rounded p-2"
-                type="text"
-                value={validFrom}
-                onChange={(e) => setValidFrom(e.target.value)}
-                placeholder="2010-01-01T19:23:24Z"
-              />
-            </div>
-            <div>
-              <label className="text-sm">Subject DID</label>
-              <input
-                className="w-full border rounded p-2"
-                value={subjectDid}
-                onChange={(e) => setSubjectDid(e.target.value)}
-                placeholder="did:example:ebfeb1f712ebc6f1c276e12ec21"
-              />
-            </div>
-            <div>
-              <label className="text-sm">Degree type</label>
-              <input
-                className="w-full border rounded p-2"
-                value={degreeType}
-                onChange={(e) => setDegreeType(e.target.value)}
-                placeholder="ExampleBachelorDegree"
-              />
-            </div>
-            <div>
-              <label className="text-sm">Degree name</label>
-              <input
-                className="w-full border rounded p-2"
-                value={degreeName}
-                onChange={(e) => setDegreeName(e.target.value)}
-                placeholder="Bachelor of Science and Arts"
-              />
-            </div>
-          </div>
-          <div className="pt-2">
-            <Button onClick={handleCreate} variant="outline" disabled={!walletAddress}>
-              Create Credential
-            </Button>
-          </div>
-
-          {txId && (
-            <div className="mt-2 text-xs text-muted-foreground">
-              <p>Transaction submitted successfully.</p>
-            </div>
-          )}
+        <div>
+          <label className="text-sm">Valid from</label>
+          <input
+            className="w-full border rounded p-2"
+            type="text"
+            value={validFrom}
+            onChange={(e) => setValidFrom(e.target.value)}
+            placeholder="2010-01-01T19:23:24Z"
+          />
+        </div>
+        <div>
+          <label className="text-sm">Subject DID</label>
+          <input
+            className="w-full border rounded p-2"
+            value={subjectDid}
+            onChange={(e) => setSubjectDid(e.target.value)}
+            placeholder="did:example:ebfeb1f712ebc6f1c276e12ec21"
+          />
+        </div>
+        <div>
+          <label className="text-sm">Degree type</label>
+          <input
+            className="w-full border rounded p-2"
+            value={degreeType}
+            onChange={(e) => setDegreeType(e.target.value)}
+            placeholder="ExampleBachelorDegree"
+          />
+        </div>
+        <div>
+          <label className="text-sm">Degree name</label>
+          <input
+            className="w-full border rounded p-2"
+            value={degreeName}
+            onChange={(e) => setDegreeName(e.target.value)}
+            placeholder="Bachelor of Science and Arts"
+          />
+        </div>
+      </div>
+      <div className="pt-2">
+        <Button onClick={handleCreate} variant="outline" disabled={!walletAddress}>
+          Create Credential
+        </Button>
+      </div>
+      {txId && (
+        <div className="mt-2 text-xs text-muted-foreground">
+          <p>Transaction submitted successfully.</p>
         </div>
       )}
-    </section>
+    </div>
   );
 }
