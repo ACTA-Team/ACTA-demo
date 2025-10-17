@@ -3,33 +3,33 @@
 import { VaultSetupCard } from '@/components/features/vault/VaultSetupCard';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { Button } from '@/components/ui/button';
+import { Hero } from '@/components/layout/Hero';
 
 export default function VaultPage() {
   const { walletAddress } = useWalletContext();
 
-  if (!walletAddress) {
-    return (
-      <section className="container mx-auto max-w-2xl px-4 py-8">
-        <div className="min-h-[50vh] flex flex-col items-center justify-center text-center space-y-3">
-          <h1 className="text-xl font-semibold">Vault Setup</h1>
-          <p className="text-sm">Conecta tu wallet para acceder.</p>
-          <Button variant="outline" disabled>
-            Acceso restringido
-          </Button>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="container mx-auto max-w-2xl px-4 py-8">
-      <div className="space-y-4">
-        <h1 className="text-xl font-semibold">Vault Setup</h1>
-        <p className="text-sm text-muted-foreground">
-          Create a vault for your wallet and authorize your wallet as issuer.
-        </p>
-        <VaultSetupCard />
-      </div>
-    </section>
+    <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
+      <Hero
+        title="Vault Setup"
+        description="Create a vault for your wallet and authorize your wallet as issuer."
+        backHref="/demo"
+      />
+
+      <section className="mt-8">
+        {!walletAddress ? (
+          <div className="min-h-[40vh] flex flex-col items-center justify-center text-center space-y-3">
+            <p className="text-sm">Connect your wallet to access.</p>
+            <Button variant="outline" disabled>
+              Restricted access
+            </Button>
+          </div>
+        ) : (
+          <div className="mx-auto max-w-2xl">
+            <VaultSetupCard />
+          </div>
+        )}
+      </section>
+    </div>
   );
 }

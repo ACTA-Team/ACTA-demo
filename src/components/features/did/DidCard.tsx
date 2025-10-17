@@ -3,7 +3,6 @@
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useDid } from '@/hooks/did/use-did';
 import { Button } from '@/components/ui/button';
-import { BorderBeam } from '@/components/ui/border-beam';
 import { toast } from 'sonner';
 
 export function DidCard() {
@@ -21,7 +20,7 @@ export function DidCard() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded border p-4 space-y-3">
+    <div className="rounded border p-4 space-y-3">
       <div>
         <p className="text-sm">Wallet</p>
         <p className="text-xs font-mono break-all">{walletAddress || 'Not connected'}</p>
@@ -35,16 +34,6 @@ export function DidCard() {
           Compute & Save DID
         </Button>
       </div>
-
-      <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-      <BorderBeam
-        duration={6}
-        delay={3}
-        size={400}
-        borderWidth={2}
-        colorFrom="#EDEDD0"
-        colorTo="#EDEDD0"
-      />
     </div>
   );
 }

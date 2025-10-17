@@ -6,7 +6,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { BorderBeam } from '@/components/ui/border-beam';
 import { cn } from '@/lib/utils';
 
 type VcRecord = {
@@ -59,7 +58,7 @@ export function VcCard({ record, className }: { record: VcRecord; className?: st
   const contractId = record.issuance_contract || '—';
 
   return (
-    <div className={cn('relative overflow-hidden rounded border p-4 space-y-3', className)}>
+    <div className={cn('rounded border p-4 space-y-3', className)}>
       <div className="space-y-1">
         <p className="text-sm font-medium">Verifiable Credential</p>
         <p className="text-sm text-muted-foreground">
@@ -123,16 +122,6 @@ export function VcCard({ record, className }: { record: VcRecord; className?: st
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-
-      <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-      <BorderBeam
-        duration={6}
-        delay={3}
-        size={400}
-        borderWidth={2}
-        colorFrom="#EDEDD0"
-        colorTo="#EDEDD0"
-      />
     </div>
   );
 }

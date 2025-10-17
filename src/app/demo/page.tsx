@@ -44,9 +44,9 @@ export default function DemoPage() {
               </Link>
             </Button>
           </div>
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">ACTA Demo Routes</h1>
+          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">ACTA Demo</h1>
           <p className="mt-3 max-w-3xl text-sm text-muted-foreground md:text-base">
-            This page lists ACTA demo routes. Follow the suggested flow: set up the Vault, manage
+            This page lists ACTA demo. Follow the suggested flow: set up the Vault, manage
             authorized Issuers, compute your DID, and finally issue a verifiable Credential. Use the
             cards below to navigate.
           </p>

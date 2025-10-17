@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { BorderBeam } from '@/components/ui/border-beam';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useDidContext } from '@/providers/did.provider';
 import { storeVcSingleCall } from '@/lib/vault/store';
@@ -127,7 +126,7 @@ export function CredentialForm() {
           <p className="text-base">Connect your wallet to begin.</p>
         </div>
       ) : (
-        <div className="relative overflow-hidden rounded border p-3 md:p-4 space-y-3">
+        <div className="rounded border p-3 md:p-4 space-y-3">
           <div className="flex justify-end">
             <Button variant="outline" onClick={fillExample}>
               Fill Example
@@ -205,16 +204,6 @@ export function CredentialForm() {
               <p>Transaction submitted successfully.</p>
             </div>
           )}
-
-          <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-          <BorderBeam
-            duration={6}
-            delay={3}
-            size={400}
-            borderWidth={2}
-            colorFrom="#EDEDD0"
-            colorTo="#EDEDD0"
-          />
         </div>
       )}
     </section>

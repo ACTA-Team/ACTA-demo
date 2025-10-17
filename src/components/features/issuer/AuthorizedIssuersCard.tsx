@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useVault } from '@/hooks/vault/use-vault';
 import { toast } from 'sonner';
-import { BorderBeam } from '@/components/ui/border-beam';
 
 export function AuthorizedIssuersCard() {
   const { walletAddress } = useWalletContext();
@@ -24,7 +23,7 @@ export function AuthorizedIssuersCard() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded border p-4 space-y-3">
+    <div className="rounded border p-4 space-y-3">
       <div>
         <p className="text-sm">Wallet</p>
         <p className="text-xs font-mono break-all">{walletAddress || 'Not connected'}</p>
@@ -40,16 +39,6 @@ export function AuthorizedIssuersCard() {
           <p className="text-xs font-mono break-all">{txAuth}</p>
         </div>
       )}
-
-      <BorderBeam duration={6} size={400} colorFrom="#EDEDD0" colorTo="#EDEDD0" />
-      <BorderBeam
-        duration={6}
-        delay={3}
-        size={400}
-        borderWidth={2}
-        colorFrom="#EDEDD0"
-        colorTo="#EDEDD0"
-      />
     </div>
   );
 }
