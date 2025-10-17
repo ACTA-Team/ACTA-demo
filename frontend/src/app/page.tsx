@@ -3,7 +3,7 @@ import { DotPattern } from '@/components/ui/dot-pattern';
 
 export default function Home() {
   return (
-    <section className="relative min-h-[70vh] w-full overflow-hidden">
+    <section className="relative min-h-full w-full overflow-hidden">
       {/* Dot background */}
       <DotPattern
         width={24}
@@ -16,19 +16,19 @@ export default function Home() {
       />
 
       {/* Hero content */}
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:py-24">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:py-32">
         <div className="max-w-2xl">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             ACTA Demo Flow
           </h1>
-          <p className="mt-4 text-base text-muted-foreground sm:text-lg">
+          <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
             This demo separates the flow into four steps: create a vault, <br /> authorize issuers,
             compute the credential, and issue the credential.
           </p>
           <div className="mt-6 flex items-center gap-3">
             <Link
               href="/demo"
-              className="inline-flex items-center rounded border px-4 py-2 text-sm hover:bg-muted"
+              className="inline-flex items-center rounded border px-5 py-2.5 text-base hover:bg-muted"
             >
               View Demo
             </Link>
@@ -36,7 +36,7 @@ export default function Home() {
               href="https://stellar.expert/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center rounded px-4 py-2 text-sm text-muted-foreground hover:underline"
+              className="inline-flex items-center rounded px-5 py-2.5 text-base text-muted-foreground hover:underline"
             >
               View Stellar Expert
             </a>
