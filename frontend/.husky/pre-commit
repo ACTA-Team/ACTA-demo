@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
 echo "Husky: running format, lint and build before commit..."
+
+# Ensure we run inside the frontend directory
+cd "$(dirname -- "$0")/.." || exit 1
 
 # Format all files (requested) and re-stage changes
 npm run format || exit 1
