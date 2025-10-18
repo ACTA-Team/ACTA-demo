@@ -32,7 +32,6 @@ export default function DemoPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
-      {/* Hero con DotPattern y explicación */}
       <section className="relative overflow-hidden rounded-xl border bg-neutral-900/40">
         <DotPattern className="opacity-60" cx={2} cy={2} cr={1} glow={false} />
         <div className="relative z-10 p-6 sm:p-8 md:p-10">
@@ -53,7 +52,6 @@ export default function DemoPage() {
         </div>
       </section>
 
-      {/* Cards de navegación */}
       <section className="mt-8">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {routes.map((r) => (
