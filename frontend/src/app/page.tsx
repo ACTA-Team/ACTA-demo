@@ -17,7 +17,7 @@ export default function Home() {
 
       {/* Hero content */}
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:py-32">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl ml-8">
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             ACTA Demo Flow
           </h1>
