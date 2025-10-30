@@ -4,9 +4,14 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import {
   StellarWalletsKit,
   WalletNetwork,
-  allowAllModules,
-  FREIGHTER_ID,
+  FreighterModule,
+  AlbedoModule,
+  xBullModule,
 } from '@creit.tech/stellar-wallets-kit';
+import {
+  WalletConnectModule,
+  WalletConnectAllowedMethods,
+} from '@creit.tech/stellar-wallets-kit/modules/walletconnect.module';
 
 type WalletContextType = {
   walletAddress: string | null;
@@ -37,14 +42,36 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (storedName) setWalletName(storedName);
     if (storedAddress) setAuthMethod('wallet');
 
-    // Initialize Wallets Kit
     if (typeof window !== 'undefined') {
-      const kit = new StellarWalletsKit({
-        network: WalletNetwork.TESTNET,
-        selectedWalletId: FREIGHTER_ID,
-        modules: allowAllModules(),
-      });
-      setWalletKit(kit);
+      (async () => {
+        try {
+          const res = await fetch('/api/walletconnect');
+          const data = await res.json();
+          const projectId = data.projectId as string | undefined;
+          if (!projectId) throw new Error('Missing WalletConnect projectId');
+
+          const kit = new StellarWalletsKit({
+            network: WalletNetwork.TESTNET,
+            modules: [
+              new FreighterModule(),
+              new AlbedoModule(),
+              new WalletConnectModule({
+                url: 'https://nft.acta.build',
+                projectId,
+                method: WalletConnectAllowedMethods.SIGN,
+                description: 'ACTA NFT Credential DApp',
+                name: 'ACTA NFT',
+                icons: ['https://nft.acta.build/white.png'],
+                network: WalletNetwork.TESTNET,
+              }),
+              new xBullModule(),
+            ],
+          });
+          setWalletKit(kit);
+        } catch (err) {
+          console.error('Failed to initialize WalletConnect', err);
+        }
+      })();
     }
   }, []);
 
