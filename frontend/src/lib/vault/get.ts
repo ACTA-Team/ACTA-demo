@@ -9,7 +9,11 @@ type GetParams = {
   signTransaction: (xdr: string, options: { networkPassphrase: string }) => Promise<string>;
 };
 
-export async function getVcSingleCall({ owner, vcId, signTransaction }: GetParams): Promise<any> {
+export async function getVcSingleCall({
+  owner,
+  vcId,
+  signTransaction,
+}: GetParams): Promise<unknown> {
   const { apiBaseUrl, networkPassphrase } = getEnvDefaults();
 
   // 1) Prepare unsigned XDR
@@ -39,6 +43,6 @@ export async function getVcSingleCall({ owner, vcId, signTransaction }: GetParam
     const friendly = mapContractErrorToMessage(err?.message || `API error: ${resp.status}`);
     throw new Error(friendly);
   }
-  const json = (await resp.json()) as { vc: any };
+  const json = (await resp.json()) as { vc: unknown };
   return json.vc;
 }

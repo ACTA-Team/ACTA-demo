@@ -28,7 +28,7 @@ export function SiteHeader() {
   const handleDisconnect = async () => {
     try {
       await disconnectWalletKit();
-    } catch (e) {
+    } catch {
       // ignore SDK disconnect errors, still clear local state
     }
     clearWalletInfo();

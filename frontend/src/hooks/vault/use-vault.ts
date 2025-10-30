@@ -13,7 +13,9 @@ async function waitForTx(server: StellarSdk.rpc.Server, hash: string): Promise<v
       const status = (res as { status: string }).status;
       if (status === 'SUCCESS') return;
       if (status === 'FAILED') throw new Error(mapContractErrorToMessage('FAILED'));
-    } catch (_) {}
+    } catch {
+      // Ignore errors and continue polling
+    }
     await new Promise((r) => setTimeout(r, 1200));
   }
 }
@@ -57,10 +59,10 @@ export function useVault() {
         if (send.errorResult) {
           let errStr = 'unknown';
           try {
-            errStr = (send.errorResult as any).result().toString();
+            errStr = (send.errorResult as { result(): { toString(): string } }).result().toString();
           } catch {
             try {
-              errStr = (send.errorResult as any).toXDR().toString('base64');
+              errStr = (send.errorResult as { toXDR(): { toString(encoding: string): string } }).toXDR().toString('base64');
             } catch {
               errStr = '[unavailable error details]';
             }
@@ -121,10 +123,10 @@ export function useVault() {
       if (send.errorResult) {
         let errStr = 'unknown';
         try {
-          errStr = (send.errorResult as any).result().toString();
+          errStr = (send.errorResult as { result(): { toString(): string } }).result().toString();
         } catch {
           try {
-            errStr = (send.errorResult as any).toXDR().toString('base64');
+            errStr = (send.errorResult as { toXDR(): { toString(encoding: string): string } }).toXDR().toString('base64');
           } catch {
             errStr = '[unavailable error details]';
           }

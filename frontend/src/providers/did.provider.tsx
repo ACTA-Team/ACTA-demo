@@ -33,7 +33,9 @@ export function DidProvider({ children }: { children: React.ReactNode }) {
       } else {
         localStorage.removeItem('acta_owner_did');
       }
-    } catch (_) {}
+    } catch {
+      // Ignore localStorage errors
+    }
   };
 
   // Initialize DID from wallet + env or from localStorage

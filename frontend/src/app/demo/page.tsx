@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Vault, Users, Award, List, Search, Calculator } from 'lucide-react';
+import { ArrowLeft, Vault, Users, Award, List, Search} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { DotPattern } from '@/components/ui/dot-pattern';
@@ -9,38 +9,38 @@ import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 export default function DemoPage() {
   const routes = [
-    { 
-      href: '/demo/vault', 
-      title: 'Vault', 
+    {
+      href: '/demo/vault',
+      title: 'Vault',
       desc: 'Initialize and manage the demo Vault.',
       icon: <Vault className="h-4 w-4 text-black dark:text-neutral-400" />,
-      number: 1
+      number: 1,
     },
     {
       href: '/demo/issuers',
       title: 'Authorized Issuers',
       desc: 'Manage the list of allowed issuers.',
       icon: <Users className="h-4 w-4 text-black dark:text-neutral-400" />,
-      number: 2
+      number: 2,
     },
     {
       href: '/demo/credentials',
       title: 'Issue Credential',
       desc: 'Issue a verifiable credential with ACTA.',
       icon: <Award className="h-4 w-4 text-black dark:text-neutral-400" />,
-      number: 3
+      number: 3,
     },
-    { 
-      href: '/demo/vault/list', 
-      title: 'List Vault Records', 
+    {
+      href: '/demo/vault/list',
+      title: 'List Vault Records',
       desc: 'Browse stored credentials.',
-      icon: <List className="h-4 w-4 text-black dark:text-neutral-400" />
+      icon: <List className="h-4 w-4 text-black dark:text-neutral-400" />,
     },
     {
       href: '/demo/vault/get',
       title: 'Get Vault Record',
       desc: 'Retrieve a specific record by ID.',
-      icon: <Search className="h-4 w-4 text-black dark:text-neutral-400" />
+      icon: <Search className="h-4 w-4 text-black dark:text-neutral-400" />,
     },
   ];
 
@@ -106,12 +106,10 @@ const GridItem = ({ href, icon, title, description, number }: GridItemProps) => 
             proximity={64}
             inactiveZone={0.01}
           />
-          <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]">
+          <div className="border relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]">
             <div className="relative flex flex-1 flex-col justify-between gap-3">
               <div className="flex items-center justify-between">
-                <div className="w-fit rounded-lg border border-gray-600 p-2">
-                  {icon}
-                </div>
+                <div className="w-fit rounded-lg border border-gray-600 p-2">{icon}</div>
                 {number && (
                   <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">
                     {number}
