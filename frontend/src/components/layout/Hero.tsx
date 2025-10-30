@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { DotPattern } from '@/components/ui/dot-pattern';
-import { Button } from '@/components/ui/button';
+import { RainbowButton } from '@/components/ui/rainbow-button';
 import { cn } from '@/lib/utils';
+import { TextAnimate } from '@/components/ui/text-animate';
 
 interface HeroProps {
   title: string;
@@ -21,17 +21,21 @@ export function Hero({ title, description, backHref = '/demo', className }: Hero
       <div className="relative z-10 p-6 sm:p-8 md:p-10">
         {backHref && (
           <div className="mb-4">
-            <Button className="bg-white text-black hover:bg-neutral-200 gap-1" asChild size="sm">
-              <Link href={backHref}>
+            <RainbowButton asChild size="sm">
+              <Link href={backHref} className="gap-1">
                 <ArrowLeft className="h-4 w-4" />
                 Back
               </Link>
-            </Button>
+            </RainbowButton>
           </div>
         )}
-        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{title}</h1>
+        <TextAnimate animation="blurIn" as="h1" className="text-3xl font-semibold tracking-tight md:text-4xl">
+          {title}
+        </TextAnimate>
         {description && (
-          <p className="mt-3 max-w-3xl text-sm text-muted-foreground md:text-base">{description}</p>
+          <TextAnimate animation="slideLeft" as="p" className="mt-3 max-w-3xl text-sm text-muted-foreground md:text-base">
+            {description}
+          </TextAnimate>
         )}
       </div>
     </section>
