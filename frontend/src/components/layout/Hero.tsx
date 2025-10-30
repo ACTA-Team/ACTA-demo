@@ -18,11 +18,10 @@ export function Hero({ title, description, backHref = '/demo', className }: Hero
     <section
       className={cn('relative overflow-hidden rounded-xl border bg-neutral-900/40', className)}
     >
-      <DotPattern className="opacity-60" cx={2} cy={2} cr={1} glow={false} />
       <div className="relative z-10 p-6 sm:p-8 md:p-10">
         {backHref && (
           <div className="mb-4">
-            <Button asChild variant="outline" size="sm" className="gap-1">
+            <Button className="bg-white text-black hover:bg-neutral-200 gap-1" asChild size="sm">
               <Link href={backHref}>
                 <ArrowLeft className="h-4 w-4" />
                 Back
