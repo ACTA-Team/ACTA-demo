@@ -7,6 +7,16 @@ import { DotPattern } from '@/components/ui/dot-pattern';
 export default function DemoPage() {
   const routes = [
     { href: '/demo/vault', title: 'Vault', desc: 'Initialize and manage the demo Vault.' },
+    {
+      href: '/demo/issuers',
+      title: 'Authorized Issuers',
+      desc: 'Manage the list of allowed issuers.',
+    },
+    {
+      href: '/demo/credentials',
+      title: 'Issue Credential',
+      desc: 'Issue a verifiable credential with ACTA.',
+    },
     { href: '/demo/vault/list', title: 'List Vault Records', desc: 'Browse stored credentials.' },
     {
       href: '/demo/vault/get',
@@ -14,19 +24,9 @@ export default function DemoPage() {
       desc: 'Retrieve a specific record by ID.',
     },
     {
-      href: '/demo/issuers',
-      title: 'Authorized Issuers',
-      desc: 'Manage the list of allowed issuers.',
-    },
-    {
       href: '/demo/did',
       title: 'Compute DID',
       desc: 'Generate the DID associated with your account.',
-    },
-    {
-      href: '/demo/credentials',
-      title: 'Issue Credential',
-      desc: 'Issue a verifiable credential with ACTA.',
     },
   ];
 
@@ -62,7 +62,15 @@ export default function DemoPage() {
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-medium">{r.title}</h3>
-                <span className="text-primary transition group-hover:translate-x-0.5">→</span>
+                {r.title === 'Vault' && (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">1</span>
+                )}
+                {r.title === 'Authorized Issuers' && (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">2</span>
+                )}
+                {r.title === 'Issue Credential' && (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">3</span>
+                )}
               </div>
               <p className="mt-2 text-sm text-muted-foreground">{r.desc}</p>
             </Link>
