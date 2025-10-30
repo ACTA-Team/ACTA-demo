@@ -34,7 +34,7 @@ export function VaultSetupCard() {
   const copyToClipboard = (text: string, type: 'wallet' | 'did') => {
     navigator.clipboard.writeText(text);
     toast.success('Copied to clipboard');
-    
+
     if (type === 'wallet') {
       setCopiedWallet(true);
       setTimeout(() => setCopiedWallet(false), 2000);
@@ -60,7 +60,7 @@ export function VaultSetupCard() {
                   size="sm"
                   variant="ghost"
                   className="shrink-0 h-8 w-8 p-0 hover:bg-white/10"
-                  onClick={() => copyToClipboard(walletAddress, "wallet")}
+                  onClick={() => copyToClipboard(walletAddress, 'wallet')}
                 >
                   {copiedWallet ? (
                     <Check className="h-4 w-4 text-green-400" />
@@ -84,7 +84,7 @@ export function VaultSetupCard() {
                   size="sm"
                   variant="ghost"
                   className="shrink-0 h-8 w-8 p-0 hover:bg-white/10"
-                  onClick={() => copyToClipboard(ownerDid, "did")}
+                  onClick={() => copyToClipboard(ownerDid, 'did')}
                 >
                   {copiedDID ? (
                     <Check className="h-4 w-4 text-green-400" />
@@ -98,10 +98,10 @@ export function VaultSetupCard() {
         </div>
       </div>
 
-      <Button 
-        size="lg" 
+      <Button
+        size="lg"
         className="bg-white text-black hover:bg-gray-200 font-medium w-full"
-        onClick={doCreateVault} 
+        onClick={doCreateVault}
         disabled={!walletAddress || loading}
       >
         Create Vault

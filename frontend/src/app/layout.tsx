@@ -4,7 +4,7 @@ import './globals.css';
 import { WalletProvider } from '@/providers/wallet.provider';
 import { DidProvider } from '@/providers/did.provider';
 import { AppThemeProvider } from '@/providers/theme.provider';
-import { PostHogProvider } from '@/providers/PostHogProvider';
+import { PostHogProvider } from '@/providers/posthog.provider';
 import { SiteHeader } from '@/layouts/Header';
 import { Toaster } from '@/components/ui/sonner';
 

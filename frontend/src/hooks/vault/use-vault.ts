@@ -62,7 +62,9 @@ export function useVault() {
             errStr = (send.errorResult as { result(): { toString(): string } }).result().toString();
           } catch {
             try {
-              errStr = (send.errorResult as { toXDR(): { toString(encoding: string): string } }).toXDR().toString('base64');
+              errStr = (send.errorResult as { toXDR(): { toString(encoding: string): string } })
+                .toXDR()
+                .toString('base64');
             } catch {
               errStr = '[unavailable error details]';
             }
@@ -126,7 +128,9 @@ export function useVault() {
           errStr = (send.errorResult as { result(): { toString(): string } }).result().toString();
         } catch {
           try {
-            errStr = (send.errorResult as { toXDR(): { toString(encoding: string): string } }).toXDR().toString('base64');
+            errStr = (send.errorResult as { toXDR(): { toString(encoding: string): string } })
+              .toXDR()
+              .toString('base64');
           } catch {
             errStr = '[unavailable error details]';
           }
