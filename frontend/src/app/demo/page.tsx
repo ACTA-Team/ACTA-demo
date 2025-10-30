@@ -1,33 +1,47 @@
+"use client";
+
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Vault, Users, Award, List, Search, Calculator } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { DotPattern } from '@/components/ui/dot-pattern';
+import { GlowingEffect } from '@/components/ui/glowing-effect';
 
 export default function DemoPage() {
   const routes = [
-    { href: '/demo/vault', title: 'Vault', desc: 'Initialize and manage the demo Vault.' },
+    { 
+      href: '/demo/vault', 
+      title: 'Vault', 
+      desc: 'Initialize and manage the demo Vault.',
+      icon: <Vault className="h-4 w-4 text-black dark:text-neutral-400" />,
+      number: 1
+    },
     {
       href: '/demo/issuers',
       title: 'Authorized Issuers',
       desc: 'Manage the list of allowed issuers.',
+      icon: <Users className="h-4 w-4 text-black dark:text-neutral-400" />,
+      number: 2
     },
     {
       href: '/demo/credentials',
       title: 'Issue Credential',
       desc: 'Issue a verifiable credential with ACTA.',
+      icon: <Award className="h-4 w-4 text-black dark:text-neutral-400" />,
+      number: 3
     },
-    { href: '/demo/vault/list', title: 'List Vault Records', desc: 'Browse stored credentials.' },
+    { 
+      href: '/demo/vault/list', 
+      title: 'List Vault Records', 
+      desc: 'Browse stored credentials.',
+      icon: <List className="h-4 w-4 text-black dark:text-neutral-400" />
+    },
     {
       href: '/demo/vault/get',
       title: 'Get Vault Record',
       desc: 'Retrieve a specific record by ID.',
+      icon: <Search className="h-4 w-4 text-black dark:text-neutral-400" />
     },
-    // {
-    //   href: '/demo/did',
-    //   title: 'Compute DID',
-    //   desc: 'Generate the DID associated with your account.',
-    // },
   ];
 
   return (
@@ -53,30 +67,69 @@ export default function DemoPage() {
       </section>
 
       <section className="mt-8">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {routes.map((r) => (
-            <Link
-              key={r.href}
-              href={r.href}
-              className="group rounded-lg border bg-card p-4 transition hover:border-primary/50 hover:bg-card/60"
-            >
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium">{r.title}</h3>
-                {r.title === 'Vault' && (
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">1</span>
-                )}
-                {r.title === 'Authorized Issuers' && (
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">2</span>
-                )}
-                {r.title === 'Issue Credential' && (
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">3</span>
-                )}
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">{r.desc}</p>
-            </Link>
+        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {routes.map((route) => (
+            <GridItem
+              key={route.href}
+              href={route.href}
+              icon={route.icon}
+              title={route.title}
+              description={route.desc}
+              number={route.number}
+            />
           ))}
-        </div>
+        </ul>
       </section>
     </div>
   );
 }
+
+interface GridItemProps {
+  href: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  number?: number;
+}
+
+const GridItem = ({ href, icon, title, description, number }: GridItemProps) => {
+  return (
+    <li className="min-h-[14rem] list-none">
+      <Link href={href} className="block h-full">
+        <div className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3 transition-all duration-300 hover:scale-[1.02]">
+          <GlowingEffect
+            blur={0}
+            borderWidth={3}
+            spread={80}
+            glow={false}
+            disabled={false}
+            proximity={64}
+            inactiveZone={0.01}
+          />
+          <div className="border-0.75 relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]">
+            <div className="relative flex flex-1 flex-col justify-between gap-3">
+              <div className="flex items-center justify-between">
+                <div className="w-fit rounded-lg border border-gray-600 p-2">
+                  {icon}
+                </div>
+                {number && (
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-medium transition group-hover:scale-110">
+                    {number}
+                  </span>
+                )}
+              </div>
+              <div className="space-y-3">
+                <h3 className="-tracking-4 pt-0.5 font-sans text-xl/[1.375rem] font-semibold text-balance text-black md:text-2xl/[1.875rem] dark:text-white">
+                  {title}
+                </h3>
+                <h2 className="font-sans text-sm/[1.125rem] text-black md:text-base/[1.375rem] dark:text-neutral-400 [&_b]:md:font-semibold [&_strong]:md:font-semibold">
+                  {description}
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
+    </li>
+  );
+};
