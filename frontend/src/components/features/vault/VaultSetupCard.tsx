@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { RainbowButton } from '@/components/ui/rainbow-button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useDid } from '@/hooks/did/use-did';
 import { useVault } from '@/hooks/vault/use-vault';
@@ -98,14 +99,14 @@ export function VaultSetupCard() {
         </div>
       </div>
 
-      <Button 
+      <RainbowButton 
         size="lg" 
-        className="bg-white text-black hover:bg-gray-200 font-medium w-full"
+        className="w-full"
         onClick={doCreateVault} 
         disabled={!walletAddress || loading}
       >
         Create Vault
-      </Button>
+      </RainbowButton>
 
       {txInit && (
         <div className="mt-4 p-3 bg-neutral-800 rounded">

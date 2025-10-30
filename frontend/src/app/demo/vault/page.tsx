@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { VaultSetupCard } from '@/components/features/vault/VaultSetupCard';
-import { Button } from '@/components/ui/button';
+import { RainbowButton } from '@/components/ui/rainbow-button';
 import { Hero } from '@/components/layout/Hero';
 import { DotPattern } from '@/components/ui/dot-pattern';
 
@@ -29,12 +29,12 @@ export default function VaultPage() {
             <p className="text-sm text-neutral-400 mb-4">
               After creating your vault, configure authorized issuers to manage credentials.
             </p>
-            <Button asChild className="bg-white text-black hover:bg-neutral-200">
+            <RainbowButton asChild>
               <Link href="/demo/issuers" className="inline-flex items-center gap-2">
                 Authorized Issuers
                 <ArrowRight className="h-4 w-4" />
               </Link>
-            </Button>
+            </RainbowButton>
           </div>
         </section>
       </div>
