@@ -23,11 +23,11 @@ export default function DemoPage() {
       title: 'Get Vault Record',
       desc: 'Retrieve a specific record by ID.',
     },
-    {
-      href: '/demo/did',
-      title: 'Compute DID',
-      desc: 'Generate the DID associated with your account.',
-    },
+    // {
+    //   href: '/demo/did',
+    //   title: 'Compute DID',
+    //   desc: 'Generate the DID associated with your account.',
+    // },
   ];
 
   return (
