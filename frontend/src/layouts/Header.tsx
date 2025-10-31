@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useWalletKit } from '@/hooks/stellar/use-wallet-kit';
@@ -28,9 +27,7 @@ export function SiteHeader() {
   const handleDisconnect = async () => {
     try {
       await disconnectWalletKit();
-    } catch {
-      // ignore SDK disconnect errors, still clear local state
-    }
+    } catch {}
     clearWalletInfo();
     toast.info('Disconnected');
   };
@@ -38,7 +35,6 @@ export function SiteHeader() {
   return (
     <header className="w-full bg-background border-b border-border">
       <div className="mx-auto max-w-7xl flex items-center justify-between px-4 py-2">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/white.png"
@@ -58,7 +54,6 @@ export function SiteHeader() {
           />
         </Link>
 
-        {/* Wallet controls + theme */}
         <div className="flex items-center gap-2">
           {walletAddress ? (
             <div className="flex items-center gap-2">
@@ -74,11 +69,6 @@ export function SiteHeader() {
               Connect Wallet
             </Button>
           )}
-
-          <AnimatedThemeToggler
-            className="p-2 rounded-md hover:bg-muted"
-            aria-label="Change theme"
-          />
         </div>
       </div>
     </header>
