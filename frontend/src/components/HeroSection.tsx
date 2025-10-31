@@ -62,7 +62,7 @@ export default function HeroSection() {
             duration: 0.3,
             delay: 1,
           }}
-          className="relative z-10 mt-8 flex flex-wrap items-center justify-center gap-4"
+          className="relative z-10 mt-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-4"
         >
           <HoverBorderGradient
             containerClassName="rounded-full border border-black"
@@ -71,7 +71,7 @@ export default function HeroSection() {
           >
             <Link
               href="/demo"
-              className="w-60 rounded-full px-6 py-2 font-medium text-white text-center"
+              className="w-full sm:w-60 rounded-full px-6 py-2 font-medium text-white text-center"
             >
               View Demo
             </Link>
@@ -84,7 +84,7 @@ export default function HeroSection() {
           >
             <Link
               href="https://stellar.expert/"
-              className="w-60 rounded-full px-6 py-2 font-medium text-black text-center"
+              className="w-full sm:w-60 rounded-full px-6 py-2 font-medium text-black text-center"
             >
               View Stellar Expert
             </Link>

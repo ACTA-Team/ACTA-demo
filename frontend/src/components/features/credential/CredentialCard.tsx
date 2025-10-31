@@ -3,8 +3,8 @@ import { MagicCard } from '@/components/ui/magic-card';
 export function CredentialCard() {
   return (
     <div className="relative flex justify-center items-center w-full h-full py-10">
-      <MagicCard className="relative rounded-2xl ring-1 ring-border/40 w-[590px] aspect-[1.586/1] overflow-hidden shadow-xl bg-card/80 backdrop-blur-md">
-        <div className="absolute mt-[15rem] left-[23rem] w-56 h-40 bg-[url('/dark.png')] bg-no-repeat bg-contain opacity-60 z-0 pointer-events-none select-none" />
+      <MagicCard className="relative rounded-2xl ring-1 ring-border/40 w-full sm:w-[590px] max-w-[590px] aspect-[1.586/1] overflow-hidden shadow-xl bg-card/80 backdrop-blur-md mx-auto">
+        <div className="hidden md:block absolute mt-[15rem] left-[23rem] w-56 h-40 bg-[url('/dark.png')] bg-no-repeat bg-contain opacity-60 z-0 pointer-events-none select-none" />
         <div className="relative z-10 h-full w-full flex flex-col justify-between p-8 text-foreground">
           <div className="flex items-center justify-between">
             <h2 className="text-base md:text-lg font-semibold">Credential</h2>
@@ -13,7 +13,7 @@ export function CredentialCard() {
           <div className="border-t border-border/30 pt-4 grid grid-cols-1 gap-3">
             <div className="flex items-center justify-between">
               <span className="text-xs opacity-70">Owner</span>
-              <span className="text-[11px] md:text-xs font-mono truncate max-w-[420px]">
+              <span className="text-[11px] md:text-xs font-mono truncate max-w-[60vw] sm:max-w-[420px]">
                 GAGSFSAC..MUMDRXYZ
               </span>
             </div>
@@ -27,7 +27,7 @@ export function CredentialCard() {
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs opacity-70">Holder ID</span>
-              <span className="text-[11px] md:text-xs font-mono truncate max-w-[420px]">
+              <span className="text-[11px] md:text-xs font-mono truncate max-w-[60vw] sm:max-w-[420px]">
                 MUMDRXYZ..GAGSFSAC
               </span>
             </div>
