@@ -2,27 +2,33 @@
 
 import Link from 'next/link';
 import { ArrowLeft, Vault, Users, Award, List, Search } from 'lucide-react';
+import { motion } from 'motion/react';
 
 import { Button } from '@/components/ui/button';
-import { DotPattern } from '@/components/ui/dot-pattern';
 import { GlowingEffect } from '@/components/ui/glowing-effect';
+
+const listVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 8, filter: 'blur(4px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.3 },
+  },
+};
 
 export default function DemoPage() {
   const routes = [
-    // Arriba derecha: los dos pequeños
-    {
-      href: '/demo/vault/list',
-      title: 'List Vault Records',
-      desc: 'Browse stored credentials.',
-      icon: <List className="h-4 w-4 text-black dark:text-neutral-400" />,
-    },
-    {
-      href: '/demo/vault/get',
-      title: 'Get Vault Record',
-      desc: 'Retrieve a specific record by ID.',
-      icon: <Search className="h-4 w-4 text-black dark:text-neutral-400" />,
-    },
-    // Abajo: los tres con número
     {
       href: '/demo/vault',
       title: 'Vault',
@@ -38,6 +44,18 @@ export default function DemoPage() {
       number: 2,
     },
     {
+      href: '/demo/vault/list',
+      title: 'List Vault Records',
+      desc: 'Browse stored credentials.',
+      icon: <List className="h-4 w-4 text-black dark:text-neutral-400" />,
+    },
+    {
+      href: '/demo/vault/get',
+      title: 'Get Vault Record',
+      desc: 'Retrieve a specific record by ID.',
+      icon: <Search className="h-4 w-4 text-black dark:text-neutral-400" />,
+    },
+    {
       href: '/demo/credentials',
       title: 'Issue Credential',
       desc: 'Issue a verifiable credential with ACTA.',
@@ -49,7 +67,12 @@ export default function DemoPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
       <section>
-        <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(0,1fr)] min-h-screen">
+        <motion.ul
+          variants={listVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[minmax(0,1fr)] min-h-screen"
+        >
           <IntroCard />
           {routes.map((route) => (
             <GridItem
@@ -66,7 +89,7 @@ export default function DemoPage() {
               }
             />
           ))}
-        </ul>
+        </motion.ul>
       </section>
     </div>
   );
@@ -83,7 +106,7 @@ interface GridItemProps {
 
 const GridItem = ({ href, icon, title, description, number, spanClass }: GridItemProps) => {
   return (
-    <li className={`min-h-[14rem] list-none ${spanClass ?? ''}`}>
+    <motion.li variants={itemVariants} className={`min-h-[14rem] list-none ${spanClass ?? ''}`}>
       <Link href={href} className="block h-full">
         <div className="relative h-full rounded-2xl border p-2 md:rounded-3xl md:p-3 transition-all duration-300 hover:scale-[1.02]">
           <GlowingEffect
@@ -117,7 +140,7 @@ const GridItem = ({ href, icon, title, description, number, spanClass }: GridIte
           </div>
         </div>
       </Link>
-    </li>
+    </motion.li>
   );
 };
 
@@ -134,22 +157,49 @@ const IntroCard = () => {
           proximity={64}
           inactiveZone={0.01}
         />
-        <div className="border relative flex h-full flex-col gap-4 overflow-hidden rounded-xl p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]">
-          <div className="mb-2">
+        <motion.div
+          initial={{ opacity: 0, y: 10, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 0.4, ease: 'linear' }}
+          className="border relative flex h-full flex-col gap-4 overflow-hidden rounded-xl p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+            className="mb-2"
+          >
             <Button asChild variant="outline" size="sm" className="gap-1">
               <Link href="/">
                 <ArrowLeft className="h-4 w-4" />
                 Back
               </Link>
             </Button>
-          </div>
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">ACTA Demo</h1>
-          <p className="mt-3 max-w-3xl text-sm text-muted-foreground md:text-base">
+          </motion.div>
+          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+            {'ACTA Demo'.split(' ').map((word, index) => (
+              <motion.span
+                key={index}
+                initial={{ opacity: 0, filter: 'blur(4px)', y: 8 }}
+                animate={{ opacity: 1, filter: 'blur(0px)', y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 + 0.3, ease: 'linear' }}
+                className="mr-2 inline-block"
+              >
+                {word}
+              </motion.span>
+            ))}
+          </h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3, delay: 0.8 }}
+            className="mt-3 max-w-3xl text-sm text-muted-foreground md:text-base"
+          >
             This page lists ACTA demo. Follow the suggested flow: set up the Vault, manage
             authorized Issuers, compute your DID, and finally issue a verifiable Credential. Use the
             cards below to navigate.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </div>
     </li>
   );
