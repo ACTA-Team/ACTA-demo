@@ -21,7 +21,7 @@ export function AuthorizedIssuersCard() {
     try {
       const res = await authorizeSelf();
       setTxAuth(res.txId);
-      toast.success('Wallet authorized', { description: `Tx: ${res.txId}` });
+      toast.success('Wallet authorized');
     } catch (e: unknown) {
       toast.error('Could not authorize wallet', {
         description: friendlyError(e, 'Something went wrong. Please try again.'),
@@ -45,12 +45,7 @@ export function AuthorizedIssuersCard() {
           Authorize Wallet
         </Button>
       </div>
-      {txAuth && (
-        <div className="mt-2">
-          <p className="text-sm">Authorize Issuer Tx</p>
-          <p className="text-xs font-mono break-all">{txAuth}</p>
-        </div>
-      )}
+      {/* Transaction details hidden per requirement */}
     </div>
   );
 }

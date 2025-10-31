@@ -29,7 +29,7 @@ export function VaultSetupCard() {
     try {
       const res = await createVault(ownerDid);
       setTxInit(res.txId);
-      toast.success('Vault created', { description: `Tx: ${res.txId}` });
+      toast.success('Vault created');
     } catch (e: unknown) {
       toast.error('Could not create vault', {
         description: friendlyError(e, 'Something went wrong. Please try again.'),
@@ -112,12 +112,7 @@ export function VaultSetupCard() {
         Create Vault
       </Button>
 
-      {txInit && (
-        <div className="mt-4 p-3 bg-neutral-800 rounded">
-          <p className="text-sm text-neutral-400 mb-2">Create Vault Tx</p>
-          <p className="text-xs font-mono text-white break-all">{txInit}</p>
-        </div>
-      )}
+      {/* Transaction details hidden per requirement */}
     </div>
   );
 }
