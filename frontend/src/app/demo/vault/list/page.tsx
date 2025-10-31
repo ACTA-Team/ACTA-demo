@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { listVcIdsSingleCall } from '@/lib/vault/list';
 import { Hero } from '@/layouts/Hero';
-import { Copy, ExternalLink } from 'lucide-react';
+import { ArrowRight, Copy, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
+import { GlowingCard } from '@/components/ui/glowing-card';
+import { AnimatedSection } from '@/components/ui/animated-section';
 
 export default function VaultListPage() {
   const { walletAddress, signTransaction } = useWalletContext();
@@ -48,11 +50,10 @@ export default function VaultListPage() {
         backHref="/demo"
       />
 
-      <section className="mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {/* Left: List action + results or restricted */}
-          {walletAddress ? (
-            <div className="rounded border p-6 md:p-8 space-y-4">
+      <div className="mt-8 space-y-6">
+        {walletAddress ? (
+          <AnimatedSection>
+            <GlowingCard className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-medium">Vault Records</h3>
@@ -102,39 +103,38 @@ export default function VaultListPage() {
                   </ul>
                 )}
               </div>
-            </div>
-          ) : (
-            <div className="rounded border p-6 md:p-8 min-h-[20vh] flex flex-col items-center justify-center text-center space-y-3">
-              <p className="text-sm">Connect your wallet to access.</p>
-              <Button variant="outline" disabled>
-                Restricted access
+            </GlowingCard>
+          </AnimatedSection>
+        ) : (
+          <AnimatedSection>
+            <GlowingCard>
+              <div className="min-h-[20vh] flex flex-col items-center justify-center text-center space-y-3">
+                <p className="text-sm">Connect your wallet to access.</p>
+                <Button variant="outline" disabled>
+                  Restricted access
+                </Button>
+              </div>
+            </GlowingCard>
+          </AnimatedSection>
+        )}
+
+        <AnimatedSection delay={0.25}>
+          <GlowingCard>
+            <h3 className="text-lg font-medium mb-3">Next Step</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              After creating your vault, configure authorized issuers to manage credentials.
+            </p>
+            <div className="pt-2">
+              <Button asChild className="bg-white text-black hover:bg-neutral-200">
+                <Link href="/demo/vault/get">
+                  Get Credential
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
             </div>
-          )}
-
-          {/* Right: Explanation */}
-          <div className="rounded border p-6 md:p-8">
-            <h2 className="text-lg font-medium mb-2">What is this?</h2>
-            <p className="text-sm text-muted-foreground mb-3">
-              This page queries your Vault smart contract for stored credentials using your
-              connected wallet.
-            </p>
-            <ul className="text-sm list-disc pl-5 space-y-1">
-              <li>Click the List IDs button to fetch credential IDs.</li>
-              <li>Use those IDs on the Get page to retrieve details.</li>
-              <li>If you have no credentials yet, go to Issue and create one.</li>
-            </ul>
-            <div className="mt-4">
-              <Link
-                href="/demo/vault/get"
-                className="inline-flex items-center gap-1 text-sm underline"
-              >
-                Go to the Get page to fetch a credential →
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+          </GlowingCard>
+        </AnimatedSection>
+      </div>
     </div>
   );
 }

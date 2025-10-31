@@ -30,7 +30,12 @@ export function AuthorizedIssuersCard() {
         <p className="text-xs font-mono break-all">{walletAddress || 'Not connected'}</p>
       </div>
       <div className="flex gap-2 pt-2">
-        <Button onClick={doAuthorize} disabled={!walletAddress || loading} variant="outline">
+        <Button
+          className="!bg-white text-black hover:text-gray-95  0 hover:bg-gray-200 font-medium w-full"
+          onClick={doAuthorize}
+          disabled={!walletAddress || loading}
+          variant="outline"
+        >
           Authorize Wallet
         </Button>
       </div>

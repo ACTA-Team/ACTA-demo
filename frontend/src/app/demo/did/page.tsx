@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { DidCard } from '@/components/features/did/DidCard';
 import { Hero } from '@/layouts/Hero';
+import { GlowingCard } from '@/components/ui/glowing-card';
 
 export default function DidPage() {
   const { walletAddress } = useWalletContext();
@@ -18,22 +19,26 @@ export default function DidPage() {
         backHref="/demo"
       />
 
-      <section className="mt-8">
+      <div className="mt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           {/* Left: DID compute/save */}
           {walletAddress ? (
-            <DidCard />
+            <GlowingCard>
+              <DidCard />
+            </GlowingCard>
           ) : (
-            <div className="rounded border p-6 md:p-8 min-h-[20vh] flex flex-col items-center justify-center text-center space-y-3">
-              <p className="text-sm">Connect your wallet to access.</p>
-              <Button variant="outline" disabled>
-                Restricted access
-              </Button>
-            </div>
+            <GlowingCard>
+              <div className="min-h-[20vh] flex flex-col items-center justify-center text-center space-y-3">
+                <p className="text-sm">Connect your wallet to access.</p>
+                <Button variant="outline" disabled>
+                  Restricted access
+                </Button>
+              </div>
+            </GlowingCard>
           )}
 
           {/* Right: Explanation + next step */}
-          <div className="rounded border p-6 md:p-8">
+          <GlowingCard>
             <h3 className="text-lg font-medium">DID Overview</h3>
             <p className="mt-2 text-sm text-muted-foreground">
               Your DID (Decentralized Identifier) is derived from your wallet and network. Save your
@@ -45,16 +50,16 @@ export default function DidPage() {
               to create and store a verifiable credential in your vault.
             </p>
             <div className="pt-4">
-              <Button asChild variant="outline" size="sm" className="gap-1">
+              <Button asChild className="bg-white text-black hover:bg-neutral-200">
                 <Link href="/demo/credentials">
                   <ArrowLeft className="h-4 w-4" />
                   Issue Credential
                 </Link>
               </Button>
             </div>
-          </div>
+          </GlowingCard>
         </div>
-      </section>
+      </div>
     </div>
   );
 }

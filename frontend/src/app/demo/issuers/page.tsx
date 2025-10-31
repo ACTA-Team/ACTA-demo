@@ -6,6 +6,8 @@ import { AuthorizedIssuersCard } from '@/components/features/issuer/AuthorizedIs
 import { useWalletContext } from '@/providers/wallet.provider';
 import { Button } from '@/components/ui/button';
 import { Hero } from '@/layouts/Hero';
+import { GlowingCard } from '@/components/ui/glowing-card';
+import { AnimatedSection } from '@/components/ui/animated-section';
 
 export default function AuthorizedIssuersPage() {
   const { walletAddress } = useWalletContext();
@@ -16,36 +18,45 @@ export default function AuthorizedIssuersPage() {
         title="Authorized Issuers"
         description="Authorize the connected wallet as an issuer in your vault. This allows the wallet to
               issue credentials managed by your vault."
-        backHref="/demo"
+        backHref="/demo/vault"
       />
 
-      <section className="mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          {/* Left: Issuer authorization */}
+      <div className="mt-8 space-y-6">
+        <AnimatedSection>
           {walletAddress ? (
-            <AuthorizedIssuersCard />
+            <GlowingCard>
+              <AuthorizedIssuersCard />
+            </GlowingCard>
           ) : (
-            <div className="rounded border p-6 md:p-8 min-h-[20vh] flex flex-col items-center justify-center text-center space-y-3">
-              <p className="text-sm">Connect your wallet to access.</p>
-              <Button variant="outline" disabled>
-                Restricted access
-              </Button>
-            </div>
+            <GlowingCard>
+              <div className="min-h-[20vh] flex flex-col items-center justify-center text-center space-y-3">
+                <p className="text-sm">Connect your wallet to access.</p>
+                <Button variant="outline" disabled>
+                  Restricted access
+                </Button>
+              </div>
+            </GlowingCard>
           )}
+        </AnimatedSection>
 
-          {/* Right: Explanation + next step */}
-          <div className="rounded border p-6 md:p-8">
+        <AnimatedSection delay={0.25}>
+          <GlowingCard>
+            <h3 className="text-lg font-medium mb-3">Next Step</h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              After authorizing your wallet as issuer, proceed to Issue Credential to create a
+              verifiable credential in your vault.
+            </p>
             <div className="pt-4">
-              <Button asChild variant="outline" size="sm" className="gap-1">
+              <Button asChild className="bg-white text-black hover:bg-neutral-200">
                 <Link href="/demo/credentials">
                   <ArrowRight className="h-4 w-4" />
                   Issue Credential
                 </Link>
               </Button>
             </div>
-          </div>
-        </div>
-      </section>
+          </GlowingCard>
+        </AnimatedSection>
+      </div>
     </div>
   );
 }

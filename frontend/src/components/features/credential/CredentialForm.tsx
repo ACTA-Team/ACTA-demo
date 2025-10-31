@@ -192,7 +192,12 @@ export function CredentialForm() {
         </div>
       </div>
       <div className="pt-2">
-        <Button onClick={handleCreate} variant="outline" disabled={!walletAddress}>
+        <Button
+          className="!bg-white text-black hover:text-gray-95  0 hover:bg-gray-200 font-medium w-full"
+          onClick={handleCreate}
+          variant="outline"
+          disabled={!walletAddress}
+        >
           Create Credential
         </Button>
       </div>
