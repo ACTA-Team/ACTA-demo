@@ -15,7 +15,7 @@ export default function HeroSection() {
         <div className="absolute h-40 w-px bg-gradient-to-b from-transparent via-purple-500 to-transparent" />
       </div>
       <div className="absolute inset-x-0 bottom-0 h-px w-full bg-neutral-200/80 dark:bg-neutral-800/80">
-        <div className="absolute mx-auto h-px w-40 bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
+        <div className="absolute mx-auto h-px w-40 bg-gradient-to-r from-transparent via-green-500 to-transparent" />
       </div>
       <div className="px-4 py-10 md:py-20">
         <h1 className="relative z-10 mx-auto max-w-4xl text-center text-2xl font-bold text-gray-700 md:text-4xl lg:text-7xl dark:text-neutral-300">
