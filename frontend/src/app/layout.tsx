@@ -4,7 +4,6 @@ import './globals.css';
 import { WalletProvider } from '@/providers/wallet.provider';
 import { DidProvider } from '@/providers/did.provider';
 import { AppThemeProvider } from '@/providers/theme.provider';
-import { PostHogProvider } from '@/providers/posthog.provider';
 import { SiteHeader } from '@/layouts/Header';
 import { Toaster } from '@/components/ui/sonner';
 
@@ -34,17 +33,15 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <PostHogProvider>
-          <AppThemeProvider>
-            <WalletProvider>
-              <DidProvider>
-                <SiteHeader />
-                <main className="min-h-[calc(100vh-56px)]">{children}</main>
-                <Toaster position="bottom-right" />
-              </DidProvider>
-            </WalletProvider>
-          </AppThemeProvider>
-        </PostHogProvider>
+        <AppThemeProvider>
+          <WalletProvider>
+            <DidProvider>
+              <SiteHeader />
+              <main className="min-h-[calc(100vh-56px)]">{children}</main>
+              <Toaster position="bottom-right" />
+            </DidProvider>
+          </WalletProvider>
+        </AppThemeProvider>
       </body>
     </html>
   );

@@ -26,8 +26,9 @@ export function VaultSetupCard() {
       const res = await createVault(ownerDid);
       setTxInit(res.txId);
       toast.success('Vault created', { description: `Tx: ${res.txId}` });
-    } catch (e: any) {
-      toast.error(e?.message || 'Failed to create vault');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      toast.error(message || 'Failed to create vault');
     }
   };
 

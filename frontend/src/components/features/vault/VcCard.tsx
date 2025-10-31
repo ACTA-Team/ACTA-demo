@@ -8,15 +8,9 @@ import {
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
 
-type VcRecord = {
-  id?: string;
-  issuance_contract?: string;
-  issuer_did?: string;
-  data?: string;
-  [key: string]: any;
-};
+type VcRecord = Record<string, unknown>;
 
-function safeParseJson<T = any>(str?: string | null): T | null {
+function safeParseJson<T = unknown>(str?: string | null): T | null {
   if (!str || typeof str !== 'string') return null;
   try {
     return JSON.parse(str);
@@ -31,20 +25,44 @@ function safeParseJson<T = any>(str?: string | null): T | null {
 }
 
 function buildSummary(record: VcRecord) {
-  const meta = safeParseJson(record.data);
-  const vcInner = meta?.vcData ? safeParseJson(meta.vcData) : null;
+  const dataStr = typeof record.data === 'string' ? record.data : undefined;
+  const meta = safeParseJson<Record<string, unknown>>(dataStr);
+  const vcDataStr = typeof meta?.vcData === 'string' ? (meta?.vcData as string) : undefined;
+  const vcInner = vcDataStr ? safeParseJson<Record<string, unknown>>(vcDataStr) : null;
 
-  const issuerName = (meta?.issuerName as string) || (vcInner?.issuer?.name as string) || '—';
+  const getStringPath = (obj: unknown, path: string[]): string | undefined => {
+    let current: unknown = obj;
+    for (const key of path) {
+      if (
+        current &&
+        typeof current === 'object' &&
+        !Array.isArray(current) &&
+        key in (current as Record<string, unknown>)
+      ) {
+        current = (current as Record<string, unknown>)[key];
+      } else {
+        return undefined;
+      }
+    }
+    return typeof current === 'string' ? current : undefined;
+  };
+
+  const issuerName =
+    (meta?.issuerName as string) || getStringPath(vcInner, ['issuer', 'name']) || '—';
   const subjectDid =
-    (meta?.subjectDid as string) || (vcInner?.credentialSubject?.id as string) || '—';
+    (meta?.subjectDid as string) || getStringPath(vcInner, ['credentialSubject', 'id']) || '—';
   const degreeType =
-    (meta?.degreeType as string) || (vcInner?.credentialSubject?.degree?.type as string) || '—';
+    (meta?.degreeType as string) ||
+    getStringPath(vcInner, ['credentialSubject', 'degree', 'type']) ||
+    '—';
   const degreeName =
-    (meta?.degreeName as string) || (vcInner?.credentialSubject?.degree?.name as string) || '—';
+    (meta?.degreeName as string) ||
+    getStringPath(vcInner, ['credentialSubject', 'degree', 'name']) ||
+    '—';
   const validFrom =
     (meta?.validFrom as string) ||
-    (vcInner?.validFrom as string) ||
-    (vcInner?.issuanceDate as string) ||
+    getStringPath(vcInner, ['validFrom']) ||
+    getStringPath(vcInner, ['issuanceDate']) ||
     '—';
 
   return { issuerName, subjectDid, degreeType, degreeName, validFrom, meta, vcInner };
@@ -53,9 +71,9 @@ function buildSummary(record: VcRecord) {
 export function VcCard({ record, className }: { record: VcRecord; className?: string }) {
   const { issuerName, subjectDid, degreeType, degreeName, validFrom, meta, vcInner } =
     buildSummary(record);
-  const id = record.id || '—';
-  const issuerDid = record.issuer_did || '—';
-  const contractId = record.issuance_contract || '—';
+  const id = typeof record.id === 'string' ? record.id : '—';
+  const issuerDid = typeof record.issuer_did === 'string' ? record.issuer_did : '—';
+  const contractId = typeof record.issuance_contract === 'string' ? record.issuance_contract : '—';
 
   return (
     <div className={cn('rounded border p-4 space-y-3', className)}>

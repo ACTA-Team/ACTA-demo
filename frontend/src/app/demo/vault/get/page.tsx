@@ -13,7 +13,7 @@ export default function VaultGetPage() {
   const [vcId, setVcId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [vc, setVc] = useState<any | null>(null);
+  const [vc, setVc] = useState<Record<string, unknown> | null>(null);
 
   const handleGet = async () => {
     if (!walletAddress || !signTransaction) return;
@@ -26,9 +26,14 @@ export default function VaultGetPage() {
     setVc(null);
     try {
       const res = await getVcSingleCall({ owner: walletAddress, vcId, signTransaction });
-      setVc(res);
-    } catch (e: any) {
-      setError(e?.message || String(e));
+      if (res && typeof res === 'object' && !Array.isArray(res)) {
+        setVc(res as Record<string, unknown>);
+      } else {
+        setError('Unexpected response');
+      }
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -59,7 +64,7 @@ export default function VaultGetPage() {
                 </Button>
               </div>
               {error && <p className="text-sm text-red-600">{error}</p>}
-              {vc && <VcCard record={vc as any} />}
+              {vc && <VcCard record={vc} />}
             </div>
           ) : (
             <div className="rounded border p-6 md:p-8 min-h-[20vh] flex flex-col items-center justify-center text-center space-y-3">

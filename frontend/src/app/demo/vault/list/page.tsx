@@ -23,8 +23,9 @@ export default function VaultListPage() {
     try {
       const res = await listVcIdsSingleCall({ owner: walletAddress, signTransaction });
       setIds(res);
-    } catch (e: any) {
-      setError(e?.message || String(e));
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      setError(message);
     } finally {
       setLoading(false);
     }

@@ -17,8 +17,9 @@ export function AuthorizedIssuersCard() {
       const res = await authorizeSelf();
       setTxAuth(res.txId);
       toast.success('Wallet authorized', { description: `Tx: ${res.txId}` });
-    } catch (e: any) {
-      toast.error(e?.message || 'Failed to authorize issuer');
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      toast.error(message || 'Failed to authorize issuer');
     }
   };
 

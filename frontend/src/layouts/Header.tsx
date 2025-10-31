@@ -6,11 +6,6 @@ import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useWalletKit } from '@/hooks/stellar/use-wallet-kit';
 import { toast } from 'sonner';
-import { RainbowButton } from '@/components/ui/rainbow-button';
-
-function truncate(addr: string, size = 4) {
-  return `${addr.slice(0, size)}...${addr.slice(-size)}`;
-}
 
 export function SiteHeader() {
   const { walletAddress, clearWalletInfo } = useWalletContext();
@@ -58,28 +53,24 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           {walletAddress ? (
             <div className="flex items-center gap-2">
-              <RainbowButton>
-                <Button
-                  className="hover:bg-foreground hover:text-background"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDisconnect}
-                >
-                  Disconnect
-                </Button>
-              </RainbowButton>
-            </div>
-          ) : (
-            <RainbowButton>
               <Button
-                className="hover:bg-foreground hover:text-background"
+                className="!bg-white text-black hover:bg-foreground hover:text-background"
                 variant="outline"
                 size="sm"
-                onClick={handleConnect}
+                onClick={handleDisconnect}
               >
-                Connect Wallet
+                Disconnect
               </Button>
-            </RainbowButton>
+            </div>
+          ) : (
+            <Button
+              className="!bg-white text-black hover:bg-foreground hover:text-background"
+              variant="outline"
+              size="sm"
+              onClick={handleConnect}
+            >
+              Connect Wallet
+            </Button>
           )}
         </div>
       </div>

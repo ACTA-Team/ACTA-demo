@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { AuthorizedIssuersCard } from '@/components/features/issuer/AuthorizedIssuersCard';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { Button } from '@/components/ui/button';
