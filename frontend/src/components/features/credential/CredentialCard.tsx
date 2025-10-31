@@ -18,7 +18,7 @@ export function CredentialCard() {
           />
         }
       >
-        <div className="hidden md:block absolute mt-[15rem] left-[23rem] w-56 h-40 bg-[url('/dark.png')] bg-no-repeat bg-contain opacity-60 z-0 pointer-events-none select-none" />
+        <div className="hidden md:block absolute mt-[16.8rem] left-[26rem] w-40 h-full bg-[url('/dark.png')] bg-no-repeat bg-contain opacity-60 z-0 pointer-events-none select-none" />
         <div className="relative z-10 h-full w-full flex flex-col justify-between p-8 text-foreground">
           <div className="flex items-center justify-between">
             <h2 className="text-base md:text-lg font-semibold">Credential</h2>
