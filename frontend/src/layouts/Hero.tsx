@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { BorderBeam } from '@/components/ui/border-beam';
 
 interface HeroProps {
   title: string;
@@ -14,9 +15,19 @@ interface HeroProps {
 
 export function Hero({ title, description, backHref = '/demo', className }: HeroProps) {
   return (
-    <section
-      className={cn('relative overflow-hidden rounded-xl border bg-neutral-900/40', className)}
-    >
+    <div className={cn('relative overflow-hidden rounded-xl border bg-neutral-900/40', className)}>
+      <BorderBeam
+        duration={6}
+        size={400}
+        className="from-transparent via-purple-500 to-transparent"
+      />
+      <BorderBeam
+        duration={6}
+        delay={3}
+        size={400}
+        borderWidth={2}
+        className="from-transparent via-green-500 to-transparent"
+      />
       <div className="relative z-10 p-6 sm:p-8 md:p-10">
         {backHref && (
           <div className="mb-4">
@@ -33,6 +44,6 @@ export function Hero({ title, description, backHref = '/demo', className }: Hero
           <p className="mt-3 max-w-3xl text-sm text-muted-foreground md:text-base">{description}</p>
         )}
       </div>
-    </section>
+    </div>
   );
 }
