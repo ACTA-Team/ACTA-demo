@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { AuthorizedIssuersCard } from '@/components/features/issuer/AuthorizedIssuersCard';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { Button } from '@/components/ui/button';
-import { Hero } from '@/components/layout/Hero';
+import { Hero } from '@/layouts/Hero';
 
 export default function AuthorizedIssuersPage() {
   const { walletAddress } = useWalletContext();

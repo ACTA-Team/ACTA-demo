@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { CredentialForm } from '@/components/features/credential/CredentialForm';
-import { Hero } from '@/components/layout/Hero';
+import { Hero } from '@/layouts/Hero';
 import { Button } from '@/components/ui/button';
 
 export default function CredentialsPage() {

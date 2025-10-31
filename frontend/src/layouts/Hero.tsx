@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { DotPattern } from '@/components/ui/dot-pattern';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 

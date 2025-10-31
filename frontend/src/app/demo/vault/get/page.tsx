@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { getVcSingleCall } from '@/lib/vault/get';
 import { VcCard } from '@/components/features/vault/VcCard';
-import { Hero } from '@/components/layout/Hero';
+import { Hero } from '@/layouts/Hero';
 
 export default function VaultGetPage() {
   const { walletAddress, signTransaction } = useWalletContext();

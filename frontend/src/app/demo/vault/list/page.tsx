@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { listVcIdsSingleCall } from '@/lib/vault/list';
-import { Hero } from '@/components/layout/Hero';
+import { Hero } from '@/layouts/Hero';
 import { Copy, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 

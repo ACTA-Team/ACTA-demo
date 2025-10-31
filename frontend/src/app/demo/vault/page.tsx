@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { VaultSetupCard } from '@/components/features/vault/VaultSetupCard';
 import { Button } from '@/components/ui/button';
-import { Hero } from '@/components/layout/Hero';
+import { Hero } from '@/layouts/Hero';
 import { DotPattern } from '@/components/ui/dot-pattern';
 
 export default function VaultPage() {

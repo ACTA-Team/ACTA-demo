@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { DidCard } from '@/components/features/did/DidCard';
-import { Hero } from '@/components/layout/Hero';
+import { Hero } from '@/layouts/Hero';
 
 export default function DidPage() {
   const { walletAddress } = useWalletContext();
