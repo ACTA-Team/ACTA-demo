@@ -1,9 +1,23 @@
 'use client';
+import { BorderBeam } from '@/components/ui/border-beam';
 import { MagicCard } from '@/components/ui/magic-card';
 export function CredentialCard() {
   return (
     <div className="relative flex justify-center items-center w-full h-full py-10">
-      <MagicCard className="relative rounded-2xl ring-1 ring-border/40 w-full sm:w-[590px] max-w-[590px] aspect-[1.586/1] overflow-hidden shadow-xl bg-card/80 backdrop-blur-md mx-auto">
+      <MagicCard
+        className="relative rounded-2xl ring-1 ring-border/40 w-full sm:w-[590px] max-w-[590px] aspect-[1.586/1] overflow-hidden shadow-xl bg-card/80 backdrop-blur-md mx-auto"
+        overlayChildren={
+          <BorderBeam
+            size={160}
+            duration={6}
+            delay={0.3}
+            colorFrom="#9E7AFF"
+            colorTo="#FE8BBB"
+            borderWidth={2}
+            className="opacity-60"
+          />
+        }
+      >
         <div className="hidden md:block absolute mt-[15rem] left-[23rem] w-56 h-40 bg-[url('/dark.png')] bg-no-repeat bg-contain opacity-60 z-0 pointer-events-none select-none" />
         <div className="relative z-10 h-full w-full flex flex-col justify-between p-8 text-foreground">
           <div className="flex items-center justify-between">

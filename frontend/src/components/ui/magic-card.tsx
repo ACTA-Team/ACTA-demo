@@ -13,6 +13,9 @@ interface MagicCardProps {
   gradientOpacity?: number;
   gradientFrom?: string;
   gradientTo?: string;
+  // Optional overlay layer rendered above the outer border gradient
+  // and below the inner background layer.
+  overlayChildren?: React.ReactNode;
 }
 
 export function MagicCard({
@@ -23,6 +26,7 @@ export function MagicCard({
   gradientOpacity = 0.8,
   gradientFrom = '#9E7AFF',
   gradientTo = '#FE8BBB',
+  overlayChildren,
 }: MagicCardProps) {
   const mouseX = useMotionValue(-gradientSize);
   const mouseY = useMotionValue(-gradientSize);
@@ -87,6 +91,8 @@ export function MagicCard({
           `,
         }}
       />
+      {/* Custom overlay that aligns to the card perimeter */}
+      {overlayChildren}
       <div className="bg-background absolute inset-px rounded-[inherit]" />
       <motion.div
         className="pointer-events-none absolute inset-px rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
