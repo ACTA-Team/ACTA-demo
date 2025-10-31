@@ -3,7 +3,6 @@
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useDid } from '@/hooks/did/use-did';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 
 export function DidCard() {
   const { walletAddress } = useWalletContext();
@@ -12,11 +11,9 @@ export function DidCard() {
   const onSave = () => {
     const did = computeDid();
     if (!did) {
-      toast.error('Connect your wallet to compute DID');
       return;
     }
     saveComputedDid();
-    toast.success('DID saved', { description: did });
   };
 
   return (

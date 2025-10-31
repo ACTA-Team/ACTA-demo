@@ -21,28 +21,18 @@ export function CredentialForm() {
   const [validFrom, setValidFrom] = useState('');
   const [txId, setTxId] = useState<string | null>(null);
 
+  const friendlyError = (e: unknown, fallback: string) => {
+    const raw = e instanceof Error ? e.message : typeof e === 'string' ? e : '';
+    const msg = raw.trim() || fallback;
+    return msg.length > 160 ? msg.slice(0, 157) + '…' : msg;
+  };
+
   const handleCreate = async () => {
-    if (!walletAddress) {
-      toast.error('Connect your wallet first');
-      return;
-    }
-    if (!ownerDid) {
-      toast.error('Owner DID is required. Create it first.');
-      return;
-    }
-    if (!issuanceContractId) {
-      toast.error('Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local');
-      return;
-    }
-    if (!vcId || !issuerName || !subjectDid || !degreeType || !degreeName || !validFrom) {
-      toast.error('Please complete all fields');
-      return;
-    }
-    if (!signTransaction) {
-      toast.error('Signer unavailable');
-      return;
-    }
-    toast.info('Signing and submitting...');
+    if (!walletAddress) return;
+    if (!ownerDid) return;
+    if (!issuanceContractId) return;
+    if (!vcId || !issuerName || !subjectDid || !degreeType || !degreeName || !validFrom) return;
+    if (!signTransaction) return;
     setTxId(null);
     try {
       const vc = {
@@ -105,8 +95,9 @@ export function CredentialForm() {
         },
       });
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : String(e);
-      toast.error(msg);
+      toast.error('Could not create credential', {
+        description: friendlyError(e, 'Something went wrong. Please try again.'),
+      });
     }
   };
 

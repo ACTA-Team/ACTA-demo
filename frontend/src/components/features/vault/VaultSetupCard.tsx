@@ -16,25 +16,29 @@ export function VaultSetupCard() {
   const [copiedWallet, setCopiedWallet] = useState(false);
   const [copiedDID, setCopiedDID] = useState(false);
 
+  const friendlyError = (e: unknown, fallback: string) => {
+    const raw = e instanceof Error ? e.message : typeof e === 'string' ? e : '';
+    const msg = raw.trim() || fallback;
+    return msg.length > 160 ? msg.slice(0, 157) + '…' : msg;
+  };
+
   const doCreateVault = async () => {
     if (!ownerDid) {
-      toast.error('Create or save your DID first');
       return;
     }
     try {
-      toast.info('Creating vault...');
       const res = await createVault(ownerDid);
       setTxInit(res.txId);
       toast.success('Vault created', { description: `Tx: ${res.txId}` });
     } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : String(e);
-      toast.error(message || 'Failed to create vault');
+      toast.error('Could not create vault', {
+        description: friendlyError(e, 'Something went wrong. Please try again.'),
+      });
     }
   };
 
   const copyToClipboard = (text: string, type: 'wallet' | 'did') => {
     navigator.clipboard.writeText(text);
-    toast.success('Copied to clipboard');
 
     if (type === 'wallet') {
       setCopiedWallet(true);

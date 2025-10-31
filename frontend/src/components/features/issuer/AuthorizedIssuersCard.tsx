@@ -11,15 +11,21 @@ export function AuthorizedIssuersCard() {
   const { loading, authorizeSelf } = useVault();
   const [txAuth, setTxAuth] = useState<string | null>(null);
 
+  const friendlyError = (e: unknown, fallback: string) => {
+    const raw = e instanceof Error ? e.message : typeof e === 'string' ? e : '';
+    const msg = raw.trim() || fallback;
+    return msg.length > 160 ? msg.slice(0, 157) + '…' : msg;
+  };
+
   const doAuthorize = async () => {
     try {
-      toast.info('Authorizing connected wallet as issuer...');
       const res = await authorizeSelf();
       setTxAuth(res.txId);
       toast.success('Wallet authorized', { description: `Tx: ${res.txId}` });
     } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : String(e);
-      toast.error(message || 'Failed to authorize issuer');
+      toast.error('Could not authorize wallet', {
+        description: friendlyError(e, 'Something went wrong. Please try again.'),
+      });
     }
   };
 

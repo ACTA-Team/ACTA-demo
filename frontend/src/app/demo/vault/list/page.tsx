@@ -7,7 +7,6 @@ import { useWalletContext } from '@/providers/wallet.provider';
 import { listVcIdsSingleCall } from '@/lib/vault/list';
 import { Hero } from '@/layouts/Hero';
 import { ArrowRight, Copy, ExternalLink } from 'lucide-react';
-import { toast } from 'sonner';
 import { GlowingCard } from '@/components/ui/glowing-card';
 import { AnimatedSection } from '@/components/ui/animated-section';
 
@@ -36,10 +35,7 @@ export default function VaultListPage() {
   const copyId = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      toast.success('Copied to clipboard');
-    } catch {
-      toast.error('Copy failed');
-    }
+    } catch {}
   };
 
   return (

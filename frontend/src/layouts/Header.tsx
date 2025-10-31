@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useWalletKit } from '@/hooks/stellar/use-wallet-kit';
-import { toast } from 'sonner';
 
 export function SiteHeader() {
   const { walletAddress, clearWalletInfo } = useWalletContext();
@@ -14,9 +13,8 @@ export function SiteHeader() {
   const handleConnect = async () => {
     try {
       await connectWithWalletKit();
-      toast.success('Wallet connected');
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Failed to connect wallet');
+    } catch {
+      // Swallow errors silently to avoid extra alerts
     }
   };
 
@@ -25,7 +23,6 @@ export function SiteHeader() {
       await disconnectWalletKit();
     } catch {}
     clearWalletInfo();
-    toast.info('Disconnected');
   };
 
   return (
