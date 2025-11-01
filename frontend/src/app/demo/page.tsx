@@ -44,6 +44,13 @@ export default function DemoPage() {
       number: 2,
     },
     {
+      href: '/demo/credentials',
+      title: 'Issue Credential',
+      desc: 'Issue a verifiable credential with ACTA.',
+      icon: <Award className="h-4 w-4 text-black dark:text-neutral-400" />,
+      number: 3,
+    },
+    {
       href: '/demo/vault/list',
       title: 'List Vault Records',
       desc: 'Browse stored credentials.',
@@ -54,13 +61,6 @@ export default function DemoPage() {
       title: 'Get Vault Record',
       desc: 'Retrieve a specific record by ID.',
       icon: <Search className="h-4 w-4 text-black dark:text-neutral-400" />,
-    },
-    {
-      href: '/demo/credentials',
-      title: 'Issue Credential',
-      desc: 'Issue a verifiable credential with ACTA.',
-      icon: <Award className="h-4 w-4 text-black dark:text-neutral-400" />,
-      number: 3,
     },
   ];
 
