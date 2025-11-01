@@ -3,7 +3,7 @@ import { BorderBeam } from '@/components/ui/border-beam';
 import { MagicCard } from '@/components/ui/magic-card';
 export function CredentialCard() {
   return (
-    <div className="relative flex justify-center items-center w-full h-full py-4 sm:py-6 md:py-10">
+    <div className="relative flex justify-center items-center w-full h-full pt-4 sm:pt-6 md:pt-10">
       <MagicCard
         className="relative rounded-xl sm:rounded-2xl ring-1 ring-border/40 w-full sm:w-[590px] max-w-[590px] aspect-[1.586/1] shadow-xl bg-card/80 backdrop-blur-md mx-auto"
         overlayChildren={
@@ -61,18 +61,14 @@ export function CredentialCard() {
               <span className="text-[10px] sm:text-xs opacity-70">Degree Name</span>
               <span className="text-xs sm:text-sm font-medium">Bachelor of Engineering</span>
             </div>
+
+            <div className="flex items-center justify-between">
+              <div className="text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] uppercase tracking-wide opacity-70">
+                ACTA • Verifiable Credential
+              </div>
+              <div className="z-0 w-24 h-24 sm:w-32 sm:h-32 md:w-40 bg-[url('/dark.png')] bg-no-repeat bg-contain opacity-60 sm:opacity-60 md:opacity-60" />
+            </div>
           </div>
-          
-          {/* Bottom section with background image */}
-          <div className="flex justify-end items-end">
-            {/* Background Image */}
-            <div className="relative ml-auto mt-auto self-end justify-self-end w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 bg-[url('/dark.png')] bg-no-repeat bg-contain opacity-30 sm:opacity-40 md:opacity-60 pointer-events-none select-none" />
-          </div>
-        </div>
-        
-        {/* Footer */}
-        <div className="bottom-5 sm:left-4 sm:bottom-4 md:left-6 md:bottom-6 lg:left-8 lg:bottom-8 z-10 text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] uppercase tracking-wide opacity-70">
-          ACTA • Verifiable Credential
         </div>
       </MagicCard>
     </div>
