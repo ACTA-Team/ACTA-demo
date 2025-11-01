@@ -43,7 +43,7 @@ export function CredentialCard() {
               
               <div className="flex items-center justify-between">
                 <span className="text-[10px] sm:text-xs opacity-70">Issued on</span>
-                <span className="text-[10px] sm:text-xs font-mono">01/01/2010</span>
+                <span className="text-[10px] sm:text-xs font-mono">1/11/2025</span>
               </div>
               
               <div className="flex items-center justify-between">
@@ -65,7 +65,7 @@ export function CredentialCard() {
             </div>
 
             {/* Bottom section with flex-end alignment */}
-            <div className="flex items-baseline justify-between mt-auto">
+            <div className="flex items-baseline justify-between mt-auto mb-5">
               <div className="text-[7px] sm:text-[8px] md:text-[9px] lg:text-[10px] uppercase tracking-wide opacity-70">
                 ACTA • Verifiable Credential
               </div>
