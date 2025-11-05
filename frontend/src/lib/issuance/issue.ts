@@ -1,7 +1,7 @@
 'use client';
 
 import * as StellarSdk from '@stellar/stellar-sdk';
-import { getEnvDefaults } from '@/lib/env';
+import { getClientConfig } from '@/lib/env';
 
 type IssueParams = {
   owner: string;
@@ -32,9 +32,8 @@ export async function issueCredentialSingleCall({
   vaultContractId,
   signTransaction,
 }: IssueParams): Promise<IssueResult> {
-  const { apiBaseUrl, rpcUrl, networkPassphrase, issuanceContractId } = getEnvDefaults();
-  if (!issuanceContractId)
-    throw new Error('Set NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID in .env.local');
+  const { apiBaseUrl, rpcUrl, networkPassphrase, issuanceContractId } = await getClientConfig();
+  if (!issuanceContractId) throw new Error('Issuance contract ID is not configured');
 
   const server = new StellarSdk.rpc.Server(rpcUrl);
   const sourceAccount = await server.getAccount(owner);

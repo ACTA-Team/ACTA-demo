@@ -38,7 +38,7 @@ export function mapContractErrorToMessage(err: unknown): string {
   if (/Connect your wallet first/i.test(s)) return 'Connect your wallet first';
   if (/Signer unavailable/i.test(s)) return 'Signer unavailable';
   if (/Missing NEXT_PUBLIC_VAULT_CONTRACT_ID/i.test(s))
-    return 'Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local';
+    return 'Vault contract ID is not configured';
 
   // As last resort, include raw to aid debugging
   if (s.trim()) return `Unexpected error: ${s.trim()}`;

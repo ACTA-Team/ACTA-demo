@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 export function CredentialForm() {
   const { walletAddress, signTransaction } = useWalletContext();
   const { ownerDid } = useDidContext();
-  const { issuanceContractId, rpcUrl, networkPassphrase } = getEnvDefaults();
+  const { rpcUrl, networkPassphrase } = getEnvDefaults();
 
   const [issuerName, setIssuerName] = useState('');
   const [subjectDid, setSubjectDid] = useState(
@@ -43,11 +43,22 @@ export function CredentialForm() {
   const randomId = () => `cred_${crypto.randomUUID().replace(/-/g, '')}`;
 
   const handleCreate = async () => {
-    if (!walletAddress) return;
-    if (!ownerDid) return;
-    if (!issuanceContractId) return;
-    if (!issuerName || !subjectDid || !degreeType || !degreeName) return;
-    if (!signTransaction) return;
+    if (!walletAddress) {
+      toast.error('Connect your wallet first');
+      return;
+    }
+    if (!ownerDid) {
+      toast.error('Signer unavailable');
+      return;
+    }
+    if (!issuerName || !subjectDid || !degreeType || !degreeName) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    if (!signTransaction) {
+      toast.error('Signer unavailable');
+      return;
+    }
     setTxId(null);
     try {
       const generatedVcId = randomId();

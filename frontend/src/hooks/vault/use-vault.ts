@@ -2,7 +2,7 @@
 
 import * as StellarSdk from '@stellar/stellar-sdk';
 import { useCallback, useState } from 'react';
-import { getEnvDefaults } from '@/lib/env';
+import { getClientConfig } from '@/lib/env';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { mapContractErrorToMessage } from '@/lib/utils';
 
@@ -22,13 +22,30 @@ async function waitForTx(server: StellarSdk.rpc.Server, hash: string): Promise<v
 
 export function useVault() {
   const { walletAddress, signTransaction } = useWalletContext();
-  const { rpcUrl, networkPassphrase, vaultContractId } = getEnvDefaults();
   const [loading, setLoading] = useState(false);
+  const [config, setConfig] = useState<{
+    rpcUrl: string;
+    networkPassphrase: string;
+    vaultContractId: string;
+  } | null>(null);
+
+  const ensureConfig = useCallback(async () => {
+    if (config) return config;
+    const cfg = await getClientConfig();
+    const picked = {
+      rpcUrl: cfg.rpcUrl,
+      networkPassphrase: cfg.networkPassphrase,
+      vaultContractId: cfg.vaultContractId,
+    };
+    setConfig(picked);
+    return picked;
+  }, [config]);
 
   const createVault = useCallback(
     async (didUri: string) => {
       if (!walletAddress) throw new Error('Connect your wallet first');
-      if (!vaultContractId) throw new Error('Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local');
+      const { rpcUrl, networkPassphrase, vaultContractId } = await ensureConfig();
+      if (!vaultContractId) throw new Error('Vault contract ID is not configured');
       if (!signTransaction) throw new Error('Signer unavailable');
 
       setLoading(true);
@@ -94,12 +111,13 @@ export function useVault() {
         setLoading(false);
       }
     },
-    [walletAddress, vaultContractId, signTransaction, rpcUrl, networkPassphrase]
+    [walletAddress, signTransaction, ensureConfig]
   );
 
   const authorizeSelf = useCallback(async () => {
     if (!walletAddress) throw new Error('Connect your wallet first');
-    if (!vaultContractId) throw new Error('Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local');
+    const { rpcUrl, networkPassphrase, vaultContractId } = await ensureConfig();
+    if (!vaultContractId) throw new Error('Vault contract ID is not configured');
     if (!signTransaction) throw new Error('Signer unavailable');
     setLoading(true);
     try {
@@ -164,12 +182,13 @@ export function useVault() {
     } finally {
       setLoading(false);
     }
-  }, [walletAddress, vaultContractId, signTransaction, rpcUrl, networkPassphrase]);
+  }, [walletAddress, signTransaction, ensureConfig]);
 
   const authorizeAddress = useCallback(
     async (address: string) => {
       if (!walletAddress) throw new Error('Connect your wallet first');
-      if (!vaultContractId) throw new Error('Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local');
+      const { rpcUrl, networkPassphrase, vaultContractId } = await ensureConfig();
+      if (!vaultContractId) throw new Error('Vault contract ID is not configured');
       if (!signTransaction) throw new Error('Signer unavailable');
       if (!address) throw new Error('Address required');
       setLoading(true);
@@ -236,7 +255,7 @@ export function useVault() {
         setLoading(false);
       }
     },
-    [walletAddress, vaultContractId, signTransaction, rpcUrl, networkPassphrase]
+    [walletAddress, signTransaction, ensureConfig]
   );
 
   return {

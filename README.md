@@ -19,15 +19,10 @@ Create `.env.local` with:
 
 ```
 NEXT_PUBLIC_ACTA_API_URL=http://localhost:8000
-NEXT_PUBLIC_SOROBAN_RPC_URL=https://soroban-testnet.stellar.org
-NEXT_PUBLIC_NETWORK_PASSPHRASE=Test SDF Network ; September 2015
-
-# Required: your deployed contract IDs
-NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID=
-NEXT_PUBLIC_VAULT_CONTRACT_ID=
+WALLETCONNECT_PROJECT_ID=
 ```
 
-These variables are read in `src/lib/env.ts` and used by the issuance/store helpers.
+The demo now fetches RPC URL, network passphrase, and contract IDs from the ACTA API (`GET /config`). No need to set `NEXT_PUBLIC_*` for those values.
 
 ## Run locally
 
@@ -52,11 +47,12 @@ The demo integrates with the public ACTA API using two minimal helpers:
   ```ts
   import { issueCredentialSingleCall } from '@/lib/issuance/issue';
 
+  const { vaultContractId } = await getClientConfig();
   const { txId } = await issueCredentialSingleCall({
     owner: walletAddress,
     vcId: 'vc:example:123',
     vcData: JSON.stringify({ type: 'Attestation', subject: '...' }),
-    vaultContractId: process.env.NEXT_PUBLIC_VAULT_CONTRACT_ID!,
+    vaultContractId,
     signTransaction,
   });
   ```
