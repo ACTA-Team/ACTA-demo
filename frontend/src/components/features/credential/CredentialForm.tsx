@@ -2,6 +2,13 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useDidContext } from '@/providers/did.provider';
 import { storeVcSingleCall } from '@/lib/vault/store';
@@ -13,13 +20,19 @@ export function CredentialForm() {
   const { ownerDid } = useDidContext();
   const { issuanceContractId, rpcUrl, networkPassphrase } = getEnvDefaults();
 
-  const [vcId, setVcId] = useState('');
   const [issuerName, setIssuerName] = useState('');
-  const [subjectDid, setSubjectDid] = useState('');
+  const [subjectDid, setSubjectDid] = useState(
+    'did:pkh:stellar:testnet:GAGPI5M5M4CZHQPZSTXOWX4J6UQMUJWFKACPXDRQMZTK43GPOSPW6NVU'
+  );
   const [degreeType, setDegreeType] = useState('');
   const [degreeName, setDegreeName] = useState('');
-  const [validFrom, setValidFrom] = useState('');
+  const [validFrom, setValidFrom] = useState(new Date().toISOString());
   const [txId, setTxId] = useState<string | null>(null);
+  const [openIssuerDidInfo, setOpenIssuerDidInfo] = useState(false);
+  const [openIssuerNameInfo, setOpenIssuerNameInfo] = useState(false);
+  const [openSubjectDidInfo, setOpenSubjectDidInfo] = useState(false);
+  const [openCredentialTypeInfo, setOpenCredentialTypeInfo] = useState(false);
+  const [openCredentialNameInfo, setOpenCredentialNameInfo] = useState(false);
 
   const friendlyError = (e: unknown, fallback: string) => {
     const raw = e instanceof Error ? e.message : typeof e === 'string' ? e : '';
@@ -27,20 +40,23 @@ export function CredentialForm() {
     return msg.length > 160 ? msg.slice(0, 157) + '…' : msg;
   };
 
+  const randomId = () => `cred_${crypto.randomUUID().replace(/-/g, '')}`;
+
   const handleCreate = async () => {
     if (!walletAddress) return;
     if (!ownerDid) return;
     if (!issuanceContractId) return;
-    if (!vcId || !issuerName || !subjectDid || !degreeType || !degreeName || !validFrom) return;
+    if (!issuerName || !subjectDid || !degreeType || !degreeName) return;
     if (!signTransaction) return;
     setTxId(null);
     try {
+      const generatedVcId = randomId();
       const vc = {
         '@context': [
           'https://www.w3.org/ns/credentials/v2',
           'https://www.w3.org/ns/credentials/examples/v2',
         ],
-        id: vcId,
+        id: generatedVcId,
         type: ['VerifiableCredential', 'ExampleDegreeCredential'],
         issuer: { id: ownerDid, name: issuerName },
         validFrom,
@@ -71,7 +87,7 @@ export function CredentialForm() {
 
       const result = await storeVcSingleCall({
         owner: walletAddress,
-        vcId,
+        vcId: generatedVcId,
         didUri: ownerDid,
         fields,
         signTransaction: (xdr, opts) => signTransaction(xdr, opts),
@@ -102,9 +118,10 @@ export function CredentialForm() {
   };
 
   const fillExample = () => {
-    setVcId('http://university.example/credentials/3732');
     setIssuerName('Example University');
-    setSubjectDid('did:example:ebfeb1f712ebc6f1c276e12ec21');
+    setSubjectDid(
+      'did:pkh:stellar:testnet:GAGPI5M5M4CZHQPZSTXOWX4J6UQMUJWFKACPXDRQMZTK43GPOSPW6NVU'
+    );
     setDegreeType('ExampleBachelorDegree');
     setDegreeName('Bachelor of Science and Arts');
     setValidFrom('2010-01-01T19:23:24Z');
@@ -122,64 +139,145 @@ export function CredentialForm() {
         </Button>
       </div>
       <div>
-        <label className="text-sm">Owner DID</label>
+        <div className="flex items-center gap-2">
+          <label className="text-sm">Issuer DID (your DID)</label>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label="Issuer DID info"
+            onClick={() => setOpenIssuerDidInfo(true)}
+          >
+            !
+          </Button>
+        </div>
         <input className="w-full border rounded p-2" value={ownerDid || ''} readOnly />
+        <Dialog open={openIssuerDidInfo} onOpenChange={setOpenIssuerDidInfo}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Issuer DID</DialogTitle>
+              <DialogDescription>
+                Comes from your connected wallet and is read-only.
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
-      <div>
-        <label className="text-sm">Credential ID</label>
-        <input
-          className="w-full border rounded p-2"
-          value={vcId}
-          onChange={(e) => setVcId(e.target.value)}
-          placeholder="http://university.example/credentials/3732"
-        />
-      </div>
+      {/* Credential ID field removed; an ID is generated automatically on submit */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
-          <label className="text-sm">Issuer name</label>
+          <div className="flex items-center gap-2">
+            <label className="text-sm">Issuer name</label>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Issuer name info"
+              onClick={() => setOpenIssuerNameInfo(true)}
+            >
+              !
+            </Button>
+          </div>
           <input
             className="w-full border rounded p-2"
             value={issuerName}
             onChange={(e) => setIssuerName(e.target.value)}
             placeholder="Example University"
           />
+          <Dialog open={openIssuerNameInfo} onOpenChange={setOpenIssuerNameInfo}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Issuer name</DialogTitle>
+                <DialogDescription>
+                  Name of the issuing organization (e.g., Example University).
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
+        {/* Valid from hidden: se establece automáticamente bajo el capó */}
         <div>
-          <label className="text-sm">Valid from</label>
-          <input
-            className="w-full border rounded p-2"
-            type="text"
-            value={validFrom}
-            onChange={(e) => setValidFrom(e.target.value)}
-            placeholder="2010-01-01T19:23:24Z"
-          />
-        </div>
-        <div>
-          <label className="text-sm">Subject DID</label>
+          <div className="flex items-center gap-2">
+            <label className="text-sm">Subject (holder) DID</label>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Subject DID info"
+              onClick={() => setOpenSubjectDidInfo(true)}
+            >
+              !
+            </Button>
+          </div>
           <input
             className="w-full border rounded p-2"
             value={subjectDid}
             onChange={(e) => setSubjectDid(e.target.value)}
-            placeholder="did:example:ebfeb1f712ebc6f1c276e12ec21"
+            placeholder="did:pkh:stellar:testnet:GAGPI5M5M4CZHQPZSTXOWX4J6UQMUJWFKACPXDRQMZTK43GPOSPW6NVU"
           />
+          <Dialog open={openSubjectDidInfo} onOpenChange={setOpenSubjectDidInfo}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Subject (holder) DID</DialogTitle>
+                <DialogDescription>The DID of the credential holder (recipient).</DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
         <div>
-          <label className="text-sm">Degree type</label>
+          <div className="flex items-center gap-2">
+            <label className="text-sm">Credential type</label>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Credential type info"
+              onClick={() => setOpenCredentialTypeInfo(true)}
+            >
+              !
+            </Button>
+          </div>
           <input
             className="w-full border rounded p-2"
             value={degreeType}
             onChange={(e) => setDegreeType(e.target.value)}
             placeholder="ExampleBachelorDegree"
           />
+          <Dialog open={openCredentialTypeInfo} onOpenChange={setOpenCredentialTypeInfo}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Credential type</DialogTitle>
+                <DialogDescription>
+                  A concise type for the credential (e.g., ExampleBachelorDegree).
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
         <div>
-          <label className="text-sm">Degree name</label>
+          <div className="flex items-center gap-2">
+            <label className="text-sm">Credential name</label>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Credential name info"
+              onClick={() => setOpenCredentialNameInfo(true)}
+            >
+              !
+            </Button>
+          </div>
           <input
             className="w-full border rounded p-2"
             value={degreeName}
             onChange={(e) => setDegreeName(e.target.value)}
             placeholder="Bachelor of Science and Arts"
           />
+          <Dialog open={openCredentialNameInfo} onOpenChange={setOpenCredentialNameInfo}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Credential name</DialogTitle>
+                <DialogDescription>
+                  Human-readable name of the credential (e.g., Bachelor of Science and Arts).
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
       <div className="pt-2">
