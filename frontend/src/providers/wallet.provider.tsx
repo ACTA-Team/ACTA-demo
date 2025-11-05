@@ -16,8 +16,11 @@ import {
 type WalletContextType = {
   walletAddress: string | null;
   walletName: string | null;
+  // Internal wallet module id used by StellarWalletsKit
+  // Exposed for diagnostics only
+  walletId?: string | null;
   authMethod: 'wallet' | null;
-  setWalletInfo: (address: string, name: string) => Promise<void>;
+  setWalletInfo: (address: string, name: string, id: string) => Promise<void>;
   clearWalletInfo: () => void;
   signTransaction:
     | ((xdr: string, options: { networkPassphrase: string }) => Promise<string>)
@@ -27,9 +30,20 @@ type WalletContextType = {
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
+function mapWalletNameToId(name?: string | null): string | null {
+  if (!name) return null;
+  const n = name.toLowerCase();
+  if (n.includes('freighter')) return 'freighter';
+  if (n.includes('albedo')) return 'albedo';
+  if (n.includes('xbull')) return 'xbull';
+  if (n.includes('walletconnect')) return 'walletconnect';
+  return null;
+}
+
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const [walletName, setWalletName] = useState<string | null>(null);
+  const [walletId, setWalletId] = useState<string | null>(null);
   const [authMethod, setAuthMethod] = useState<'wallet' | null>(null);
   const [walletKit, setWalletKit] = useState<StellarWalletsKit | null>(null);
 
@@ -38,8 +52,10 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     const storedAddress =
       typeof window !== 'undefined' ? localStorage.getItem('walletAddress') : null;
     const storedName = typeof window !== 'undefined' ? localStorage.getItem('walletName') : null;
+    const storedId = typeof window !== 'undefined' ? localStorage.getItem('walletId') : null;
     if (storedAddress) setWalletAddress(storedAddress);
     if (storedName) setWalletName(storedName);
+    if (storedId) setWalletId(storedId);
     if (storedAddress) setAuthMethod('wallet');
 
     if (typeof window !== 'undefined') {
@@ -68,35 +84,64 @@ export function WalletProvider({ children }: { children: ReactNode }) {
             ],
           });
           setWalletKit(kit);
-        } catch (err) {
-          console.error('Failed to initialize WalletConnect', err);
-        }
+          // If we have a stored wallet id, restore the selected module
+          if (storedId) {
+            try {
+              kit.setWallet(storedId);
+            } catch (e) {}
+          } else if (storedName) {
+            const inferredId = mapWalletNameToId(storedName);
+            if (inferredId) {
+              try {
+                kit.setWallet(inferredId);
+                setWalletId(inferredId);
+              } catch (e) {}
+            }
+          }
+        } catch (err) {}
       })();
     }
   }, []);
 
-  const setWalletInfo = async (address: string, name: string) => {
+  const setWalletInfo = async (address: string, name: string, id: string) => {
     setWalletAddress(address);
     setWalletName(name);
+    setWalletId(id);
     setAuthMethod('wallet');
     if (typeof window !== 'undefined') {
       localStorage.setItem('walletAddress', address);
       localStorage.setItem('walletName', name);
+      localStorage.setItem('walletId', id);
     }
   };
 
   const clearWalletInfo = () => {
     setWalletAddress(null);
     setWalletName(null);
+    setWalletId(null);
     setAuthMethod(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('walletAddress');
       localStorage.removeItem('walletName');
+      localStorage.removeItem('walletId');
     }
   };
 
   const signTransaction = async (xdr: string, options: { networkPassphrase: string }) => {
     if (!walletKit) throw new Error('Wallet kit not initialized');
+    // Ensure wallet module is set; attempt restore from state/localStorage
+    try {
+      const id =
+        walletId || (typeof window !== 'undefined' ? localStorage.getItem('walletId') : null);
+      if (id) {
+        walletKit.setWallet(id);
+      } else {
+        const inferredId = mapWalletNameToId(walletName);
+        if (inferredId) {
+          walletKit.setWallet(inferredId);
+        }
+      }
+    } catch (e) {}
     const { signedTxXdr } = await walletKit.signTransaction(xdr, {
       address: walletAddress || undefined,
       networkPassphrase: options.networkPassphrase,
@@ -109,6 +154,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       value={{
         walletAddress,
         walletName,
+        walletId,
         authMethod,
         setWalletInfo,
         clearWalletInfo,

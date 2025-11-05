@@ -45,6 +45,7 @@ export function AuthorizedIssuersCard() {
           Authorize Wallet
         </Button>
       </div>
+      {/* Old UI restored: only wallet authorization button */}
       {/* Transaction details hidden per requirement */}
     </div>
   );

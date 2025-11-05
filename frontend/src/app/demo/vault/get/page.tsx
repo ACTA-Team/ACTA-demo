@@ -3,21 +3,21 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
-import { getVcSingleCall } from '@/lib/vault/get';
+import { getVcDirect } from '@/lib/vault/get';
 import { VcCard } from '@/components/features/vault/VcCard';
 import { Hero } from '@/layouts/Hero';
 import { GlowingCard } from '@/components/ui/glowing-card';
 import { AnimatedSection } from '@/components/ui/animated-section';
 
 export default function VaultGetPage() {
-  const { walletAddress, signTransaction } = useWalletContext();
+  const { walletAddress } = useWalletContext();
   const [vcId, setVcId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [vc, setVc] = useState<Record<string, unknown> | null>(null);
 
   const handleGet = async () => {
-    if (!walletAddress || !signTransaction) return;
+    if (!walletAddress) return;
     if (!vcId) {
       setError('VC ID required');
       return;
@@ -26,7 +26,7 @@ export default function VaultGetPage() {
     setError(null);
     setVc(null);
     try {
-      const res = await getVcSingleCall({ owner: walletAddress, vcId, signTransaction });
+      const res = await getVcDirect({ owner: walletAddress, vcId });
       if (res && typeof res === 'object' && !Array.isArray(res)) {
         setVc(res as Record<string, unknown>);
       } else {
@@ -44,7 +44,7 @@ export default function VaultGetPage() {
     <div className="mx-auto max-w-7xl px-4 py-6 md:py-8">
       <Hero
         title="Get credential (VC)"
-        description="Fetch a credential from your Vault by ID (owner signature required)."
+        description="Fetch a credential from your Vault by ID (no signature required)."
         backHref="/demo"
       />
 

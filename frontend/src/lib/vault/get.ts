@@ -9,6 +9,11 @@ type GetParams = {
   signTransaction: (xdr: string, options: { networkPassphrase: string }) => Promise<string>;
 };
 
+type GetDirectParams = {
+  owner: string;
+  vcId: string;
+};
+
 export async function getVcSingleCall({
   owner,
   vcId,
@@ -37,6 +42,23 @@ export async function getVcSingleCall({
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr }),
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    const friendly = mapContractErrorToMessage(err?.message || `API error: ${resp.status}`);
+    throw new Error(friendly);
+  }
+  const json = (await resp.json()) as { vc: unknown };
+  return json.vc;
+}
+
+export async function getVcDirect({ owner, vcId }: GetDirectParams): Promise<unknown> {
+  const { apiBaseUrl } = getEnvDefaults();
+
+  const resp = await fetch(`${apiBaseUrl}/vault/get_vc_direct`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ owner, vcId }),
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));

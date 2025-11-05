@@ -32,6 +32,16 @@ export function mapContractErrorToMessage(err: unknown): string {
   // Generic fallbacks
   if (/FAILED/i.test(s)) return 'Transaction failed';
   if (/ERROR/i.test(s)) return 'Transaction error';
+  if (/Please set the wallet first/i.test(s)) return 'Please set the wallet first';
+
+  // Pass-through for common frontend validation errors
+  if (/Connect your wallet first/i.test(s)) return 'Connect your wallet first';
+  if (/Signer unavailable/i.test(s)) return 'Signer unavailable';
+  if (/Missing NEXT_PUBLIC_VAULT_CONTRACT_ID/i.test(s))
+    return 'Missing NEXT_PUBLIC_VAULT_CONTRACT_ID in .env.local';
+
+  // As last resort, include raw to aid debugging
+  if (s.trim()) return `Unexpected error: ${s.trim()}`;
 
   return 'Unexpected error';
 }

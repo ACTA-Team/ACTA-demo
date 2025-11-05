@@ -13,8 +13,8 @@ export const useWalletKit = () => {
       onWalletSelected: async (option: ISupportedWallet) => {
         walletKit.setWallet(option.id);
         const { address } = await walletKit.getAddress();
-        const { name } = option;
-        await setWalletInfo(address, name);
+        const { name, id } = option;
+        await setWalletInfo(address, name, id);
       },
     });
   };

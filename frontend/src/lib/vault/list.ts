@@ -8,6 +8,10 @@ type ListParams = {
   signTransaction: (xdr: string, options: { networkPassphrase: string }) => Promise<string>;
 };
 
+type ListDirectParams = {
+  owner: string;
+};
+
 export async function listVcIdsSingleCall({
   owner,
   signTransaction,
@@ -35,6 +39,23 @@ export async function listVcIdsSingleCall({
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr }),
+  });
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    const friendly = mapContractErrorToMessage(err?.message || `API error: ${resp.status}`);
+    throw new Error(friendly);
+  }
+  const json = (await resp.json()) as { vc_ids: string[] };
+  return json.vc_ids || [];
+}
+
+export async function listVcIdsDirect({ owner }: ListDirectParams): Promise<string[]> {
+  const { apiBaseUrl } = getEnvDefaults();
+
+  const resp = await fetch(`${apiBaseUrl}/vault/list_vc_ids_direct`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ owner }),
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));

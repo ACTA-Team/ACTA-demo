@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useWalletContext } from '@/providers/wallet.provider';
 import { useDid } from '@/hooks/did/use-did';
@@ -10,7 +10,7 @@ import { Copy, Check } from 'lucide-react';
 
 export function VaultSetupCard() {
   const { walletAddress } = useWalletContext();
-  const { ownerDid } = useDid();
+  const { ownerDid, saveComputedDid } = useDid();
   const { loading, createVault } = useVault();
   const [txInit, setTxInit] = useState<string | null>(null);
   const [copiedWallet, setCopiedWallet] = useState(false);
@@ -36,6 +36,15 @@ export function VaultSetupCard() {
       });
     }
   };
+
+  // Auto-compute and save DID on mount to reduce friction
+  useEffect(() => {
+    if (!ownerDid && walletAddress) {
+      try {
+        saveComputedDid();
+      } catch {}
+    }
+  }, [ownerDid, walletAddress, saveComputedDid]);
 
   const copyToClipboard = (text: string, type: 'wallet' | 'did') => {
     navigator.clipboard.writeText(text);
