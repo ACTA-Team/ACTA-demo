@@ -43,30 +43,7 @@ export async function getClientConfig(): Promise<EnvDefaults> {
     cachedConfig = merged;
     return merged;
   } catch {
-    // If primary API base fails, attempt a transparent fallback to testnet
-    const testnetBase = 'https://api.testnet.acta.build';
-    if (defaults.apiBaseUrl !== testnetBase) {
-      try {
-        const resp2 = await fetch(`${testnetBase}/config`, {
-          method: 'GET',
-          headers: { Accept: 'application/json' },
-          cache: 'no-store',
-        });
-        if (resp2.ok) {
-          const json2 = (await resp2.json()) as Partial<EnvDefaults>;
-          const merged2: EnvDefaults = {
-            apiBaseUrl: testnetBase,
-            rpcUrl: json2.rpcUrl || defaults.rpcUrl,
-            networkPassphrase: json2.networkPassphrase || defaults.networkPassphrase,
-            issuanceContractId: json2.issuanceContractId || defaults.issuanceContractId,
-            vaultContractId: json2.vaultContractId || defaults.vaultContractId,
-          };
-          cachedConfig = merged2;
-          return merged2;
-        }
-      } catch {}
-    }
-    // Final fallback to defaults if neither API is reachable
+    // Fallback to defaults if API not reachable
     cachedConfig = defaults;
     return defaults;
   }

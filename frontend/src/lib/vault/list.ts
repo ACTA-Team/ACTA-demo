@@ -19,11 +19,10 @@ export async function listVcIdsSingleCall({
   const { apiBaseUrl, networkPassphrase } = getEnvDefaults();
 
   // 1) Prepare unsigned XDR
-  const prepForm = new URLSearchParams();
-  prepForm.set('owner', owner);
   const prepResp = await fetch(`${apiBaseUrl}/tx/prepare/list_vc_ids`, {
     method: 'POST',
-    body: prepForm,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ owner }),
   });
   if (!prepResp.ok) {
     const err = await prepResp.json().catch(() => ({}));
@@ -36,11 +35,10 @@ export async function listVcIdsSingleCall({
   const signedXdr = await signTransaction(prepJson.unsignedXdr, { networkPassphrase });
 
   // 3) Execute read with signed XDR
-  const readForm = new URLSearchParams();
-  readForm.set('signedXdr', signedXdr);
   const resp = await fetch(`${apiBaseUrl}/vault/list_vc_ids`, {
     method: 'POST',
-    body: readForm,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ signedXdr }),
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
@@ -54,11 +52,10 @@ export async function listVcIdsSingleCall({
 export async function listVcIdsDirect({ owner }: ListDirectParams): Promise<string[]> {
   const { apiBaseUrl } = getEnvDefaults();
 
-  const directForm = new URLSearchParams();
-  directForm.set('owner', owner);
   const resp = await fetch(`${apiBaseUrl}/vault/list_vc_ids_direct`, {
     method: 'POST',
-    body: directForm,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ owner }),
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
