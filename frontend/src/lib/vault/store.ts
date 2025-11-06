@@ -36,10 +36,18 @@ export async function storeVcSingleCall({
   const server = new StellarSdk.rpc.Server(rpcUrl);
 
   // 1) Prepare unsigned XDR in the API from normal form fields
+  // Use URL-encoded to avoid CORS preflight while keeping semantics
+  const prepForm = new URLSearchParams();
+  prepForm.set('owner', owner);
+  prepForm.set('vcId', vcId);
+  prepForm.set('didUri', didUri);
+  // Flatten fields into form entries
+  Object.entries(fields || {}).forEach(([k, v]) => {
+    prepForm.set(k, String(v));
+  });
   const prepResp = await fetch(`${apiBaseUrl}/tx/prepare/store`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ owner, vcId, didUri, fields }),
+    body: prepForm,
   });
   if (!prepResp.ok) {
     const err = await prepResp.json().catch(() => ({}));
@@ -52,10 +60,12 @@ export async function storeVcSingleCall({
   const signedXdr = await signTransaction(prepJson.unsignedXdr, { networkPassphrase });
 
   // 3) Submit to API using the user-signed flow
+  const storeForm = new URLSearchParams();
+  storeForm.set('signedXdr', signedXdr);
+  storeForm.set('vcId', vcId);
   const resp = await fetch(`${apiBaseUrl}/vault/store`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ signedXdr, vcId }),
+    body: storeForm,
   });
   if (!resp.ok) {
     const err = await resp.json().catch(() => ({}));
