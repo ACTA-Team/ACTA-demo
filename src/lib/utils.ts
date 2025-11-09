@@ -29,6 +29,11 @@ export function mapContractErrorToMessage(err: unknown): string {
     return 'Credentials already migrated';
   }
 
+  // Trustline-related errors (Soroban asset contract bridging to Classic)
+  if (/trustline entry is missing/i.test(s)) {
+    return 'Missing trustline for the asset. Add a change-trust for the token on both sender and recipient accounts, then retry.';
+  }
+
   // Generic fallbacks
   if (/FAILED/i.test(s)) return 'Transaction failed';
   if (/ERROR/i.test(s)) return 'Transaction error';
