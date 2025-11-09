@@ -63,7 +63,7 @@ export async function issueCredentialSingleCall({
   const signedXdr = await signTransaction(tx.toXDR(), { networkPassphrase });
 
   // Submit signed XDR via API (user-signed flow)
-  const resp = await fetch(`${apiBaseUrl}/credentials`, {
+  const resp = await fetch(`/api/proxy/credentials`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr, vcId }),

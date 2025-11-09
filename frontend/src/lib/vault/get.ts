@@ -22,7 +22,7 @@ export async function getVcSingleCall({
   const { apiBaseUrl, networkPassphrase } = getEnvDefaults();
 
   // 1) Prepare unsigned XDR
-  const prepResp = await fetch(`${apiBaseUrl}/tx/prepare/get_vc`, {
+  const prepResp = await fetch(`/api/proxy/tx/prepare/get_vc`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ owner, vcId }),
@@ -38,7 +38,7 @@ export async function getVcSingleCall({
   const signedXdr = await signTransaction(prepJson.unsignedXdr, { networkPassphrase });
 
   // 3) Execute read with signed XDR
-  const resp = await fetch(`${apiBaseUrl}/vault/get_vc`, {
+  const resp = await fetch(`/api/proxy/vault/get_vc`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr }),
@@ -55,7 +55,7 @@ export async function getVcSingleCall({
 export async function getVcDirect({ owner, vcId }: GetDirectParams): Promise<unknown> {
   const { apiBaseUrl } = getEnvDefaults();
 
-  const resp = await fetch(`${apiBaseUrl}/vault/get_vc_direct`, {
+  const resp = await fetch(`/api/proxy/vault/get_vc_direct`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ owner, vcId }),

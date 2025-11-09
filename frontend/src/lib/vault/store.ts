@@ -35,8 +35,7 @@ export async function storeVcSingleCall({
 
   const server = new StellarSdk.rpc.Server(rpcUrl);
 
-  // 1) Prepare unsigned XDR in the API from normal form fields
-  const prepResp = await fetch(`${apiBaseUrl}/tx/prepare/store`, {
+  const prepResp = await fetch(`/api/proxy/tx/prepare/store`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ owner, vcId, didUri, fields }),
@@ -48,11 +47,9 @@ export async function storeVcSingleCall({
   }
   const prepJson = (await prepResp.json()) as { unsignedXdr: string };
 
-  // 2) Sign with the connected wallet
   const signedXdr = await signTransaction(prepJson.unsignedXdr, { networkPassphrase });
 
-  // 3) Submit to API using the user-signed flow
-  const resp = await fetch(`${apiBaseUrl}/vault/store`, {
+  const resp = await fetch(`/api/proxy/vault/store`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr, vcId }),

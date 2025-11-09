@@ -19,7 +19,7 @@ export async function listVcIdsSingleCall({
   const { apiBaseUrl, networkPassphrase } = getEnvDefaults();
 
   // 1) Prepare unsigned XDR
-  const prepResp = await fetch(`${apiBaseUrl}/tx/prepare/list_vc_ids`, {
+  const prepResp = await fetch(`/api/proxy/tx/prepare/list_vc_ids`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ owner }),
@@ -35,7 +35,7 @@ export async function listVcIdsSingleCall({
   const signedXdr = await signTransaction(prepJson.unsignedXdr, { networkPassphrase });
 
   // 3) Execute read with signed XDR
-  const resp = await fetch(`${apiBaseUrl}/vault/list_vc_ids`, {
+  const resp = await fetch(`/api/proxy/vault/list_vc_ids`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ signedXdr }),
@@ -52,7 +52,7 @@ export async function listVcIdsSingleCall({
 export async function listVcIdsDirect({ owner }: ListDirectParams): Promise<string[]> {
   const { apiBaseUrl } = getEnvDefaults();
 
-  const resp = await fetch(`${apiBaseUrl}/vault/list_vc_ids_direct`, {
+  const resp = await fetch(`/api/proxy/vault/list_vc_ids_direct`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ owner }),

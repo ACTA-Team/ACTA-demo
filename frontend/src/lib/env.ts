@@ -26,7 +26,7 @@ export async function getClientConfig(): Promise<EnvDefaults> {
   if (cachedConfig) return cachedConfig;
   const defaults = getEnvDefaults();
   try {
-    const resp = await fetch(`${defaults.apiBaseUrl}/config`, {
+    const resp = await fetch(`/api/proxy/config`, {
       method: 'GET',
       headers: { Accept: 'application/json' },
       cache: 'no-store',
