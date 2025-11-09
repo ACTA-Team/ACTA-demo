@@ -31,17 +31,23 @@ export async function storeVcSingleCall({
   fields,
   signTransaction,
 }: StoreParams): Promise<StoreResult> {
-  const { apiBaseUrl, rpcUrl, networkPassphrase } = getEnvDefaults();
+  const { apiBaseUrl, rpcUrl, networkPassphrase, apiKey } = getEnvDefaults();
 
   const server = new StellarSdk.rpc.Server(rpcUrl);
 
+  const commonHeaders: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+  if (apiKey) commonHeaders['X-ACTA-Key'] = apiKey;
+
   const prepResp = await fetch(`/api/proxy/tx/prepare/store`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: commonHeaders,
     body: JSON.stringify({ owner, vcId, didUri, fields }),
   });
   if (!prepResp.ok) {
-    const err = await prepResp.json().catch(() => ({}));
+    const err = await prepResp.json().catch(async () => ({ message: await prepResp.text() }));
     const friendly = mapContractErrorToMessage(err?.message || `API error: ${prepResp.status}`);
     throw new Error(friendly);
   }
@@ -51,11 +57,11 @@ export async function storeVcSingleCall({
 
   const resp = await fetch(`/api/proxy/vault/store`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: commonHeaders,
     body: JSON.stringify({ signedXdr, vcId }),
   });
   if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
+    const err = await resp.json().catch(async () => ({ message: await resp.text() }));
     const friendly = mapContractErrorToMessage(err?.message || `API error: ${resp.status}`);
     throw new Error(friendly);
   }

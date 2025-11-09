@@ -4,6 +4,7 @@ export type EnvDefaults = {
   networkPassphrase: string;
   issuanceContractId: string;
   vaultContractId: string;
+  apiKey: string;
 };
 
 export function getEnvDefaults(): EnvDefaults {
@@ -17,7 +18,8 @@ export function getEnvDefaults(): EnvDefaults {
     process.env.NEXT_PUBLIC_NETWORK_PASSPHRASE || 'Test SDF Network ; September 2015';
   const issuanceContractId = process.env.NEXT_PUBLIC_ACTA_ISSUANCE_CONTRACT_ID || '';
   const vaultContractId = process.env.NEXT_PUBLIC_VAULT_CONTRACT_ID || '';
-  return { apiBaseUrl, rpcUrl, networkPassphrase, issuanceContractId, vaultContractId };
+  const apiKey = process.env.NEXT_PUBLIC_ACTA_API_KEY || '';
+  return { apiBaseUrl, rpcUrl, networkPassphrase, issuanceContractId, vaultContractId, apiKey };
 }
 
 let cachedConfig: EnvDefaults | null = null;
@@ -39,6 +41,7 @@ export async function getClientConfig(): Promise<EnvDefaults> {
       networkPassphrase: json.networkPassphrase || defaults.networkPassphrase,
       issuanceContractId: json.issuanceContractId || defaults.issuanceContractId,
       vaultContractId: json.vaultContractId || defaults.vaultContractId,
+      apiKey: defaults.apiKey,
     };
     cachedConfig = merged;
     return merged;

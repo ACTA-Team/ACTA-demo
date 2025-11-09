@@ -32,7 +32,8 @@ export async function issueCredentialSingleCall({
   vaultContractId,
   signTransaction,
 }: IssueParams): Promise<IssueResult> {
-  const { apiBaseUrl, rpcUrl, networkPassphrase, issuanceContractId } = await getClientConfig();
+  const { apiBaseUrl, rpcUrl, networkPassphrase, issuanceContractId, apiKey } =
+    await getClientConfig();
   if (!issuanceContractId) throw new Error('Issuance contract ID is not configured');
 
   const server = new StellarSdk.rpc.Server(rpcUrl);
@@ -63,13 +64,19 @@ export async function issueCredentialSingleCall({
   const signedXdr = await signTransaction(tx.toXDR(), { networkPassphrase });
 
   // Submit signed XDR via API (user-signed flow)
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+  if (apiKey) headers['X-ACTA-Key'] = apiKey;
+
   const resp = await fetch(`/api/proxy/credentials`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify({ signedXdr, vcId }),
   });
   if (!resp.ok) {
-    const err = await resp.json().catch(() => ({}));
+    const err = await resp.json().catch(async () => ({ message: await resp.text() }));
     throw new Error(err?.message || `API error: ${resp.status}`);
   }
   const json = (await resp.json()) as { tx_id: string };

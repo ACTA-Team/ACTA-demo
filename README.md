@@ -102,3 +102,4 @@ The credential form demonstrating these calls lives at `src/components/features/
 - Use testnet settings while developing locally.
 - Do not store PII in plaintext on chain; prefer hashes or ciphertext.
 - Ensure your issuance and vault contract IDs are set and valid before issuing or storing.
+- Set `NEXT_PUBLIC_ACTA_API_KEY` to your ACTA API key for protected endpoints.
