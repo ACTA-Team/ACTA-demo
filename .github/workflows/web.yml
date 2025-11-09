@@ -2,13 +2,13 @@ name: Web CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
     paths:
-      - "web/**"
+      - 'web/**'
   pull_request:
-    branches: ["main"]
+    branches: ['main']
     paths:
-      - "web/**"
+      - 'web/**'
 
 jobs:
   build:
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
