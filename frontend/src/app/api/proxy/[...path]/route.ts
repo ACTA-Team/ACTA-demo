@@ -37,7 +37,9 @@ export async function GET(req: NextRequest, context: { params: Promise<{ path: s
     cache: 'no-store',
   });
   const body = await res.text();
-  return new NextResponse(body, { status: res.status, headers: res.headers });
+  const headers = new Headers(res.headers);
+  headers.set('x-proxy-target', target);
+  return new NextResponse(body, { status: res.status, headers });
 }
 
 export async function POST(req: NextRequest, context: { params: Promise<{ path: string[] }> }) {
@@ -51,7 +53,9 @@ export async function POST(req: NextRequest, context: { params: Promise<{ path: 
     cache: 'no-store',
   });
   const text = await res.text();
-  return new NextResponse(text, { status: res.status, headers: res.headers });
+  const headers = new Headers(res.headers);
+  headers.set('x-proxy-target', target);
+  return new NextResponse(text, { status: res.status, headers });
 }
 
 export async function OPTIONS() {
