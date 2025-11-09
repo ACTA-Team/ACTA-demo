@@ -60,30 +60,41 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
     if (typeof window !== 'undefined') {
       (async () => {
+        // Always initialize kit with browser wallets; add WalletConnect only if configured
         try {
-          const res = await fetch('/api/walletconnect');
-          const data = await res.json();
-          const projectId = data.projectId as string | undefined;
-          if (!projectId) throw new Error('Missing WalletConnect projectId');
+          let projectId: string | undefined = undefined;
+          try {
+            const res = await fetch('/api/walletconnect');
+            if (res.ok) {
+              const data = await res.json();
+              projectId = (data?.projectId as string | undefined) || undefined;
+            }
+          } catch {}
+
+          const origin = window.location.origin;
+          const modules = [new FreighterModule(), new AlbedoModule(), new xBullModule()];
+          if (projectId) {
+            modules.splice(
+              2,
+              0, // keep xBull last for consistency
+              new WalletConnectModule({
+                url: origin,
+                projectId,
+                method: WalletConnectAllowedMethods.SIGN,
+                description: 'ACTA Credential DApp',
+                name: 'ACTA',
+                icons: [`${origin}/white.png`],
+                network: WalletNetwork.TESTNET,
+              })
+            );
+          }
 
           const kit = new StellarWalletsKit({
             network: WalletNetwork.TESTNET,
-            modules: [
-              new FreighterModule(),
-              new AlbedoModule(),
-              new WalletConnectModule({
-                url: 'https://nft.acta.build',
-                projectId,
-                method: WalletConnectAllowedMethods.SIGN,
-                description: 'ACTA NFT Credential DApp',
-                name: 'ACTA NFT',
-                icons: ['https://nft.acta.build/white.png'],
-                network: WalletNetwork.TESTNET,
-              }),
-              new xBullModule(),
-            ],
+            modules,
           });
           setWalletKit(kit);
+
           // If we have a stored wallet id, restore the selected module
           if (storedId) {
             try {
@@ -98,7 +109,16 @@ export function WalletProvider({ children }: { children: ReactNode }) {
               } catch (e) {}
             }
           }
-        } catch (err) {}
+        } catch (err) {
+          // As a last resort, ensure at least browser wallets are available
+          try {
+            const kit = new StellarWalletsKit({
+              network: WalletNetwork.TESTNET,
+              modules: [new FreighterModule(), new AlbedoModule(), new xBullModule()],
+            });
+            setWalletKit(kit);
+          } catch {}
+        }
       })();
     }
   }, []);
