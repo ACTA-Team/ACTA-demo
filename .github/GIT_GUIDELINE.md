@@ -1,4 +1,4 @@
-# 🚀 Commit Guidelines | Acta
+# 🚀 Commit Guidelines | ACTA
 
 This guideline establishes clear conventions for commit messages and branch naming in this project. Following these conventions ensures a consistent and readable commit history.
 
